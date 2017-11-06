@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Game#1</title>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+		<meta name="format-detection" content="telephone=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+			
+		<!--<link rel="apple-touch-icon-precomposed" sizes="57x57" href="icons/57x57.png">
+		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="icons/72x72.png">
+		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="icons/114x114.png">
+		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="icons/144x144.png">-->
+
+		<style>
+			body {
+			text-align: center;
+			margin: 0;
+			background: black;
+			color: #404040;
+			font-family: sans-serif;
+			font-size: 10pt;	
+				background: #1e5799; /* Old browsers */
+				background: -moz-linear-gradient(top,  #1e5799 0%, #207cca 35%, #207cca 35%, #2989d8 70%, #7db9e8 100%); /* FF3.6+ */
+				background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#1e5799), color-stop(35%,#207cca), color-stop(35%,#207cca), color-stop(70%,#2989d8), color-stop(100%,#7db9e8)); /* Chrome,Safari4+ */
+				background: -webkit-linear-gradient(top,  #1e5799 0%,#207cca 35%,#207cca 35%,#2989d8 70%,#7db9e8 100%); /* Chrome10+,Safari5.1+ */
+				background: -o-linear-gradient(top,  #1e5799 0%,#207cca 35%,#207cca 35%,#2989d8 70%,#7db9e8 100%); /* Opera 11.10+ */
+				background: -ms-linear-gradient(top,  #1e5799 0%,#207cca 35%,#207cca 35%,#2989d8 70%,#7db9e8 100%); /* IE10+ */
+				background: linear-gradient(to bottom,  #1e5799 0%,#207cca 35%,#207cca 35%,#2989d8 70%,#7db9e8 100%); /* W3C */
+				filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1e5799', endColorstr='#7db9e8',GradientType=0 ); /* IE6-9 */
+
+			}
+		</style>
+	</head>
+
+	<body>	
+		<script>
+			// prevent gray bar on ios devices
+			window.addEventListener('scroll', function () {
+			if (document.activeElement === document.body && window.scrollY > 0) {
+					document.body.scrollTop = 0;
+				}
+			}, true);
+		</script>
+
+		
+
+		<script type="text/javascript" src="js/typedarray.js"></script>
+		<script type="text/javascript" src="js/soundjs-0.6.2.min.js"></script>
+		<script type="text/javascript" src="js/three.js"></script>
+		<script type="text/javascript" src="js/spe.min.js"></script>
+		<script type="text/javascript" src="js/game.js"></script>	
+
+		
+	</body>
+</html>

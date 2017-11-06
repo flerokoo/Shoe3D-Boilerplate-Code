@@ -1,0 +1,30 @@
+{
+  "name": "shoe3d_boilerplate",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^2.18.13",
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-changed": "^3.1.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-help": "^1.6.1",
+    "gulp-if": "^2.0.2",
+    "gulp-sequence": "^0.4.6",
+    "gulp-tap": "^1.0.1",
+    "gulp-uglify": "^3.0.0",
+    "yargs": "^10.0.3"
+  },
+  "dependencies": {
+    "browserify": "^14.5.0"
+  }
+}

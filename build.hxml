@@ -1,0 +1,21 @@
+-main com.Main
+-js build/js/game.js
+-dce full
+
+## Classpaths
+-cp src
+-cp lib
+
+## Libraries
+-lib actuate
+-lib threejs
+
+## Flags
+
+# Allow getting textures that come with scenes/objects with Assets.getTexture(...)
+# -D shoe3d_allow_textures
+
+# Iterate over screen hierarchy calling lateUpdate(). 
+# Disabled by default for the sake of performance
+# -D shoe3d_enable_late_update
+
