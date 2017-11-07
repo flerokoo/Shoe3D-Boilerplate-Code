@@ -96,6 +96,16 @@ class AssetPack
 		return geomDef;
 	}*/
 	
+	public function getObject3D(name:String, required:Bool = true )
+	{
+		if ( ! _objectMap.exists( name ) )
+			if ( required ) 
+				throw 'No object3d with name=$name'
+			else
+				return null;
+		return _objectMap[name];
+	}
+
 	public function getTexDef( name:String, required:Bool = true ) 
 	{
 		var ret:TexDef = null;

@@ -22,7 +22,7 @@ class Main
 		#end
 
 		// Setting window mode: Fill or Default
-		 System.window.mode = Default;	
+		//System.window.mode = Default;	
 		
 		// Setting canvas size
 		// System.window.setSize( 600, 600 );		
@@ -36,6 +36,7 @@ class Main
 		//NicePreloader.loadFolderFromAssets( "pack", prepareGame, startGame );			
 	
 		BasicPreloader.loadFolderFromAssets( "pack", function(pack){
+			js.Browser.console.log(pack);
 			prepareGame(pack);
 			startGame();
 		});
@@ -45,12 +46,10 @@ class Main
 	static function prepareGame( pack:AssetPack )
 	{
 		System.screen.addScreen( 'mainMenu', com.screens.MainMenu );
-		trace("PREPS");
 	}
 	
 	static function startGame( )
 	{
-		System.screen.show( 'mainMenu' );		
-		trace("STARTING");	
+		System.screen.show( 'mainMenu' );
 	}
 }

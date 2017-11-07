@@ -1,5 +1,6 @@
 package com.screens;
 
+import shoe3d.asset.Assets;
 import shoe3d.component.*;
 import shoe3d.core.game.GameObject;
 import shoe3d.screen.GameScreen;
@@ -28,11 +29,19 @@ class MainMenu extends GameScreen
             .add(new S3Mesh(new CubeGeometry( 3, 3, 3 ), new MeshLambertMaterial({color: 0x00ff00})))
             .add(new ComponentExample())
         );
+
+        layer.addChild( new GameObject()
+            .add(new CameraCopter(cam))
+        );
         
         cam.position.set(10,10,10);
         cam.lookAt(new Vector3());
 
-        
+        haxe.Timer.delay( function(){
+            var ob = Assets.getPack('pack').getObject3D("scenery");
+            layer.scene.add( ob );
+        }, 2000 );
+
         var layer2d = newLayer2D("2d-layer", true);
         
         layer2d.addChild( new GameObject()

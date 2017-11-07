@@ -12,8 +12,13 @@ private typedef AssetCollection = Array<AssetInfo>;
 class AssetProcessor
 {
 
+	static var _remove:Array<String>;
+
 	public static function build( localBase:String = "assets"):Array<Field> 
 	{
+
+		_remove = [];
+
 		var fields = Context.getBuildFields();
 
 		var packs:Map<String,AssetCollection> = new Map();
@@ -31,14 +36,26 @@ class AssetProcessor
 
 
 		var prepared = [ for (i in packs) for (j in i) j ];
+
+		for( rm in _remove ){
+			var i = prepared.length-1;
+			while(i >= 0) {
+				if(prepared[i].path == rm) {
+					prepared.splice(i, 1);
+				}
+				i--;
+			}
+		}
+
+		// for(i in prepared) trace(i);
+
 		var field:Field = {
 			name: "localPacks",
 			access: [ APrivate, AStatic ],
 			kind: FVar( macro : Array<Dynamic>, macro $v{prepared} ),
 			pos: Context.currentPos()
 		};
-
-		//trace(prepared);
+		
 		
 		/*switch( Context.getType("shoe3d.asset.AssetPackLoader")) {
 			case TInst( cl, _ ):				
@@ -68,15 +85,12 @@ class AssetProcessor
 				#if shoe3d_include_pack_name
 					extra.push(packName);
 				#end
-
 				out.push( {
 					path: pathToCurrentAssetFromCWD,
 					name: Path.join(extra.concat([pathToCurrentFolderFromPack, name])),
 					bytes: FileSystem.stat(pathToCurrentAssetFromCWD).size,
 					format: getFormat(pathToCurrentAssetFromCWD)		
 				});
-
-				trace(Path.join(extra.concat([pathToCurrentFolderFromPack, name])));
 			}
 		}
 	}
@@ -96,7 +110,14 @@ class AssetProcessor
 				var type:String = getDynamicValue(parsed, ["metadata", "type"]).toLowerCase();
 				switch(type){
 					case "object":
-						// TODO remove maps
+						#if shoe3d_allow_textures
+						var images:Array<Dynamic> = getDynamicValue(parsed, ["images"]);
+						for( i in images ) {
+							var dir = Path.directory(path);
+							var name = i.name;
+							_remove.push(Path.join([dir, name]));
+						}						
+						#end
 						return OBJECT;
 					case 'geometry':
 						return GEOMETRY;

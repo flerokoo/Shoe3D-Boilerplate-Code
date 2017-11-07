@@ -1,4 +1,5 @@
 package shoe3d.asset;
+import shoe3d.util.Assert;
 import shoe3d.asset.AssetPack.GeomDef;
 import shoe3d.asset.AssetPack.TexDef;
 import shoe3d.util.Log;
@@ -159,9 +160,13 @@ class Assets
 		return r;
 	}
 	
-	public static function getTexDef( name:String ):TexDef
+	public static function getTexDef( name:String, ?fromPack:String ):TexDef
 	{		
 		if ( _packMap == null ) throw 'No asset packs';
+
+		if(fromPack != null) 
+			return getPack(fromPack).getTexDef(name);
+
 		for ( i in _packMap )
 		{
 			var ret = i.getTexDef( name, false );
@@ -185,9 +190,13 @@ class Assets
 		return null;	
 	}*/
 	
-	public static function getFile( name:String ):File
+	public static function getFile(name:String, ?fromPack:String):File
 	{
 		if ( _packMap == null ) throw 'No asset packs';
+
+		if(fromPack != null) 
+			return getPack(fromPack).getFile(name);
+
 		for ( i in _packMap )
 		{
 			var ret = i.getFile( name, false );
@@ -196,6 +205,12 @@ class Assets
 		
 		throw 'No file $name found';
 		return null;	
+	}
+
+	public static function getPack(name:String):AssetPack
+	{
+		Assert.that(_packMap.exists(name), 'Pack $name doesnt exist');
+		return _packMap[name];
 	}
 	
 }

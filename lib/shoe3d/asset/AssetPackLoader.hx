@@ -51,9 +51,7 @@ class AssetPackLoader
 		if ( format == null ) format = getFormat( url );
 		//if ( format != RAW ) name = Tools.getFileNameWithoutExtension( name );
 		if ( format != RAW ) name = haxe.io.Path.withoutExtension( name );
-		var ext = name.getUrlExtension();
-		
-		trace(name, format, url);
+		var ext = name.getUrlExtension();		
 
 		// TODO Придумать какой-то другой способ отличать геометрию от сцены и от просто json
 		if ( ext != null &&( ext.toLowerCase() == 'geom' || ext.toLowerCase() == 'scene' ) ) name = Tools.getFileNameWithoutExtension( name );
@@ -226,7 +224,7 @@ class AssetPackLoader
 	
 	private function load() 
 	{
-		untyped __js__('createjs.Sound.alternateExtensions = ["aac, ogg, mp3"]');
+		untyped __js__('createjs.Sound.alternateExtensions = ["aac", "ogg", "mp3"]');
 
 		_manager = new LoadingManager( onCompletePack, onProgress );
 		for ( e in _entriesToLoad ) {
@@ -236,13 +234,13 @@ class AssetPackLoader
 				case MP3, M4A, OPUS, OGG, WAV:
 					new SoundLoader(_manager).load( e.url, e.name, _pack );
 				case BUFFERGEOMETRY:
-					new TemporaryBufGeomLoader(_manager).load(e.url, function(data) onLoadBufferGeometry(data, e) );
+					new TemporaryBufGeomLoader(_manager).load(e.url, function(data) onLoadBufferGeometry(data, e), null, onEntryLoadError);
 				case GEOMETRY:
-					new TemporaryGeomLoader(_manager).load(e.url, function(data) onLoadGeometry(data, e) );
+					new TemporaryGeomLoader(_manager).load(e.url, function(data) onLoadGeometry(data, e), null, onEntryLoadError);
 				case OBJECT:
-					new ObjectLoader(_manager).load( e.url, function (data) onLoadObject( untyped data, e ) );
+					new ObjectLoader(_manager).load( e.url, function (data) { onLoadObject( data, e ); trace(data); }, null, onEntryLoadError );
 				default:
-					new FileLoader( _manager ).load( e.url, function (data) onLoadData( data, e ) );
+					new FileLoader(_manager).load( e.url, function (data) onLoadData( data, e ), null, onEntryLoadError );
 				
 			}
 		}
@@ -258,6 +256,7 @@ class AssetPackLoader
 
 	function onLoadObject(object:Object3D, e:AssetEntry) 
 	{
+		trace("OBJECT LOADED " + e.name);
 		_pack._objectMap.set(e.name, object);
 	}
 		
@@ -269,6 +268,7 @@ class AssetPackLoader
 	
 	function onCompletePack() 
 	{
+		trace("PACL LOADED");
 		_promise.result = _pack;
 		if ( _onCompleteCallback != null ) _onCompleteCallback( _pack );
 	}
@@ -309,7 +309,7 @@ class AssetPackLoader
 
 	function onLoadBufferGeometry( data:BufferGeometry, e:AssetEntry )
 	{
-		//_pack._geomMap.set( e.name, data );
+		_pack._bufGeomMap.set( e.name, data );
 	}
 	
 	function onLoadData( data:String, e:AssetEntry ) 
@@ -323,10 +323,11 @@ class AssetPackLoader
 @:native("THREE.BufferGeometryLoader")
 extern class TemporaryBufGeomLoader {
 	public function new( manager:LoadingManager );
-	public function load( url:String, callback:BufferGeometry->Void ):Void;
+	public function load( url:String, callback:BufferGeometry->Void, ?onProgress:Void->Void, ?onError:Dynamic->Void ):Void;
 }
 
+@:native("THREE.GeometryLoader")
 extern class TemporaryGeomLoader {
 	public function new( manager:LoadingManager );
-	public function load( url:String, callback:Geometry->Void ):Void;
+	public function load( url:String, callback:Geometry->Void, ?onProgress:Void->Void, ?onError:Dynamic->Void ):Void;
 }
