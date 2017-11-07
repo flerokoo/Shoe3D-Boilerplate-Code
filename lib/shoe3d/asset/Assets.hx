@@ -54,7 +54,6 @@ class Assets
 		return true;		
 	}
 
-
 	public static function loadPack( folder:String, ?onSuccess:AssetPack->Void, ?onProgress:Float->Void ):Promise<AssetPack>
 	{
 		var ldr = new AssetPackLoader();
@@ -65,13 +64,12 @@ class Assets
 			}
 		
 		var promise = ldr.start( onSuccess, onProgress );
-		
-
 
 		return promise;		
 	}
 
-	public static function addToQueue(packName:String, prioritize:Bool = false):LoadingTaskHandle {
+	public static function addToQueue(packName:String, prioritize:Bool = false):LoadingTaskHandle 
+	{
 		var handle = {
 			onProgress: new SingleSignal(),
 			onComplete: new SingleSignal()
@@ -94,11 +92,13 @@ class Assets
 		return handle;
 	}
 
-	public static function prioritize() {
+	public static function prioritize() 
+	{
 
 	}
 
-	public static function callWhenPacksReady(packNames:Array<String>, callback:Void->Void, shouldAddToQueue:Bool = false, prioritize:Bool = false) {
+	public static function callWhenPacksReady(packNames:Array<String>, callback:Void->Void, shouldAddToQueue:Bool = false, prioritize:Bool = false)
+	{
 		if(packsReady(packNames)) {
 			callback();
 		} else {
@@ -115,7 +115,8 @@ class Assets
 
 	}
 
-	static function processQueue() {
+	static function processQueue() 
+	{
 		if(_loading != null) return;
 		if(_queue.length > 0) {
 			_loading = _queue.shift();
@@ -123,11 +124,13 @@ class Assets
 		}
 	}
 
-	static function onPackProgress(progress:Float) {
+	static function onPackProgress(progress:Float) 
+	{
 		_loading.handle.onProgress.emit(progress);
 	}
 
-	static function onPackLoad(pack:AssetPack) {	
+	static function onPackLoad(pack:AssetPack) 
+	{	
 		registerPack(pack, _loading.pack);
 		_loading.handle.onProgress.emit(1);
 		_loading.handle.onComplete.emit(pack);		

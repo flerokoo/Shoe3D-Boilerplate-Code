@@ -53,7 +53,7 @@ class ScreenManager
 	
 	static function recalcScale()
 	{
-		scale = Math.min(  System.window.width / width,  System.window.height / height );
+		scale = Math.min(System.window.width / width,  System.window.height / height);
 	}
 	
 	public static function prepare( name:String ) 

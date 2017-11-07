@@ -2,15 +2,34 @@
 -js build/js/game.js
 -dce full
 
+
 ## Classpaths
 -cp src
 -cp lib
+
 
 ## Libraries
 -lib actuate
 -lib threejs
 
-## Flags
+
+## Game Meta Flags
+
+# Game width
+-D shoe3d_game_width=640
+# Game height
+-D shoe3d_game_height=800
+# Game name
+-D shoe3d_game_name="Game#1"
+# Game version
+-D shoe3d_game_version="1.0.0"
+
+
+## Extra Flags
+
+# This will flatten you out coming JavaScript code to speed up the perforamce. 
+# But you will loose the the namespacing.
+# -D js-flatten
 
 # Allow getting textures that come with scenes/objects with Assets.getTexture(...)
 # -D shoe3d_allow_textures

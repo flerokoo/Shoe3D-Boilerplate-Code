@@ -31,7 +31,7 @@ class RenderManager
 		
 		if( checkWebGLSupport() ) {			
 			renderer = new WebGLRenderer({antialias:true});
-			renderer.setSize( 800, 600);			
+			renderer.setSize(10, 10);			
 			container.appendChild( renderer.domElement );
 			renderer.autoClear = false;	
 			return true;

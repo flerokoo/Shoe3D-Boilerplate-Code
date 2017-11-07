@@ -85,7 +85,7 @@ class System
 
 	 */ 
 	
-	public static function init( originalWidth:Int = 640, originalHeight = 800) 
+	public static function init( originalWidth:Int = 640, originalHeight:Int = 800) 
 	{
 		HtmlUtils.fixAndroidMath();
 		//_baseScene = new Scene();
@@ -98,9 +98,12 @@ class System
 		ready = ready && InputManager.init();
 		ready = ready && StorageSystem.init();
 		ready = ready && SoundSystem.init();
-		
+				
+
 		ScreenManager.setSize( originalWidth, originalHeight );
 		ScreenManager.recalcScale();
+		
+		//WindowManager.setSize( originalWidth, originalHeight );
 		window.updateLayout();
 		
 		

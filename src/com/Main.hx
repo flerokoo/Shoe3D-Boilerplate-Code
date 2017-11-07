@@ -13,14 +13,17 @@ class Main
 	@:expose
 	static function main() 
 	{
-		// init and setting original game resolution (in which game is supposed to be)
-		System.init( 640, 800 );			
+
+		trace(GameMeta.width, GameMeta.height);
+		// init and setting original game resolution (in which game is supposed to be)		
+		System.init(GameMeta.width, GameMeta.height);			
+
 		#if debug  
 		System.showFPSMeter();  
 		#end
 
 		// Setting window mode: Fill or Default
-		// System.window.mode = Default;	
+		 System.window.mode = Default;	
 		
 		// Setting canvas size
 		// System.window.setSize( 600, 600 );		
@@ -37,7 +40,7 @@ class Main
 			prepareGame(pack);
 			startGame();
 		});
-		
+
 	}	
 	
 	static function prepareGame( pack:AssetPack )

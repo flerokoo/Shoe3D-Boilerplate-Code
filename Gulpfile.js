@@ -11,6 +11,16 @@ var tap = require("gulp-tap");
 var browserSync = require("browser-sync").create()
 require('gulp-help')(gulp);
 
+
+var settings = {
+    bundleOrder: [
+        "build/js/typedarray.js", 
+        "build/js/soundjs-0.6.2.min.js", 
+        "build/js/three.js", 
+        "build/js/spe.min.js"
+    ]
+}
+
 var debug = args.release === undefined || !args.release;
 
 gulp.task( "compile", "Compile haxe code into js", function( callback ) {
@@ -33,19 +43,14 @@ gulp.task( "copy-bootstrap", "Copy static files to build folder",  function() {
 })
 
 gulp.task( "bundle", "Concat all js files contained in build folder into one", function() {
-    return gulp.src([
-            "build/js/typedarray.js", 
-            "build/js/soundjs-0.6.2.min.js", 
-            "build/js/three.js", 
-            "build/js/spe.js", 
-            "build/js/game.js"
-        ])
+    var bundleList = settings.bundleOrder.concat(["build/js/game.js"]);
+    return gulp.src(bundleList)
         .pipe(concat("bundle.js"))
         .pipe(gulpif(!debug, uglify()))
         .pipe(gulp.dest("build/js/"))
         .pipe(tap(function(){
                 if(!debug) {
-                    del(["build/js/*.js", "build/js/*.map", "!build/js/bundle.js"]);                
+                    del(bundleList);                
                 }
             }))
 })

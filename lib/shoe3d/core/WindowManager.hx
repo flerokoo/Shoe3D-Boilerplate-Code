@@ -1,4 +1,5 @@
 package shoe3d.core;
+import shoe3d.screen.ScreenManager;
 import js.html.DivElement;
 import shoe3d.util.HtmlUtils;
 import shoe3d.util.Info;
@@ -20,8 +21,8 @@ class WindowManager
 	public static var resize(default,null):ZeroSignal;
 	public static var orientation(default, null):Value<Orientation>;
 	public static var mode(default, set):WindowMode = Fill;
-	public static var width(get, null):Int = 640;
-	public static var height(get, null):Int = 800;
+	public static var width(get, null):Int;
+	public static var height(get, null):Int;
 	public static var hidden(default, null):Value<Bool>;
 	public static var fullscreen(default, null):Value<Bool>;
 	public static var targetOrientation:Orientation;
@@ -148,24 +149,26 @@ class WindowManager
 				Log.sys("Falling back to devicePixelRatio=1");
 				//ratio = 1;
 			}
+			
 			RenderManager.renderer.setSize( Browser.window.innerWidth * ratio, Browser.window.innerHeight * ratio );	
 			
 			div.style.width = canvas.style.width = Browser.window.innerWidth + "px";
 			div.style.height = canvas.style.height = Browser.window.innerHeight + "px";		
 		}
 		else 
-		{
+		{			
+			div.style.width = width + "px";
+			div.style.height = height + "px";
 			
-			div.style.width = width+ "px";
-			div.style.height = height+ "px";
-			RenderManager.renderer.setSize( width, height );
 			Browser.document.body.style.padding = "0.06px";
 			Browser.document.body.style.height = "100%";
+
+			RenderManager.renderer.setSize(ScreenManager.width, ScreenManager.height);
 			
-			
-			var marginTop = Math.floor( Math.max( 0, (Browser.window.innerHeight - height ) / 2 ) );
+			var marginTop = Math.floor(Math.max(0, (Browser.window.innerHeight - height ) / 2));
 			div.style.margin = marginTop + "px auto 0";			
 		}
+
 	}
 		
 	private static function resetStyle()
@@ -209,7 +212,7 @@ class WindowManager
 			case Fill:
 				return Browser.window.innerWidth;
 			case Default:
-				return width;
+				return (Info.isMobileBrowser() ? Browser.window.innerWidth : ScreenManager.width);
 		}
 	}
 	
@@ -219,13 +222,12 @@ class WindowManager
 			case Fill:
 				return Browser.window.innerHeight;
 			case Default:
-				return height;
+				return (Info.isMobileBrowser() ? Browser.window.innerHeight : ScreenManager.height);
 		}
 	}
 	
 	static public function setSize( w:Int, h:Int, fit:Bool = false ) 
 	{
-		// TODO Implement fit fixed canvas size to window size
 		width = w;
 		height = h;
 		mode = Default;
