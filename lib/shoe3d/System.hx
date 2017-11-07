@@ -104,9 +104,7 @@ class System
 		ScreenManager.recalcScale();
 		
 		//WindowManager.setSize( originalWidth, originalHeight );
-		window.updateLayout();
-		
-		
+		window.updateLayout();		
 		
 		_loop = new MainLoop();
 		_loop._frame.connect( clearInfoBox );

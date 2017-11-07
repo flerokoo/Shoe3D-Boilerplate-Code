@@ -1,4 +1,6 @@
 package shoe3d.asset;
+import js.three.BufferGeometry;
+import js.three.Object3D;
 import js.three.Material;
 import js.three.Geometry;
 import js.Browser;
@@ -60,11 +62,6 @@ class AssetPackLoader
 	
 	function getFormat( url:String ):AssetFormat
 	{
-		//trace( url, url.indexOf( '.scene.json' ) );
-		//Blender don't want to save just *.geom. It wants *.geom.json. So, shortcut:
-		if ( url.toLowerCase().indexOf( '.geom.json' ) >= 0 ) return GEOM;
-		if ( url.toLowerCase().indexOf( '.scene.json' ) >= 0 ) return SCENE;
-		
 		var extension = url.getUrlExtension();
         if (extension != null) {
             switch (extension.toLowerCase()) {
@@ -77,9 +74,6 @@ class AssetPackLoader
                 case "opus": return OPUS;
                 case "wav": return WAV;
                 case "aac": return AAC;
-				
-				case 'geom': return GEOM;
-				case 'scene': return SCENE;
 				
             }
         } else {
@@ -207,7 +201,7 @@ class AssetPackLoader
 	{
 		if ( _supportedFormats == null )
 			detectImageFormats( function ( imgFormats:Array<AssetFormat> ) {
-				_supportedFormats = imgFormats.concat( detectAudioFormats() ).concat( [ RAW, GEOM, SCENE ] );
+				_supportedFormats = imgFormats.concat( detectAudioFormats() ).concat( [ RAW, GEOMETRY, BUFFERGEOMETRY, OBJECT ] );
 				fn( _supportedFormats );
 			} )
 		else
@@ -241,10 +235,12 @@ class AssetPackLoader
 					new TextureLoader( _manager ).load(e.url, function(tex) onLoadTexture(tex, e), null, onEntryLoadError);					
 				case MP3, M4A, OPUS, OGG, WAV:
 					new SoundLoader(_manager).load( e.url, e.name, _pack );
-				case GEOM:
-					new JSONLoader(_manager).load( e.url, function( geom:Geometry, mats:Array<Material> ) onLoadGeometry( geom, e ) );
-				case SCENE:
-					new ObjectLoader(_manager).load( e.url, function (data) onLoadScene( untyped data, e ) );
+				case BUFFERGEOMETRY:
+					new TemporaryBufGeomLoader(_manager).load(e.url, function(data) onLoadBufferGeometry(data, e) );
+				case GEOMETRY:
+					new TemporaryGeomLoader(_manager).load(e.url, function(data) onLoadGeometry(data, e) );
+				case OBJECT:
+					new ObjectLoader(_manager).load( e.url, function (data) onLoadObject( untyped data, e ) );
 				default:
 					new FileLoader( _manager ).load( e.url, function (data) onLoadData( data, e ) );
 				
@@ -260,9 +256,9 @@ class AssetPackLoader
 		js.Browser.console.log("Error happened when loading: " + e);
 	}
 
-	function onLoadScene(object:Scene, e:AssetEntry) 
+	function onLoadObject(object:Object3D, e:AssetEntry) 
 	{
-		_pack._sceneMap.set( e.name, object );
+		_pack._objectMap.set(e.name, object);
 	}
 		
 	function onProgress( nm:String, a:Float, b:Float ) 
@@ -310,9 +306,27 @@ class AssetPackLoader
 	{
 		_pack._geomMap.set( e.name, data );
 	}
+
+	function onLoadBufferGeometry( data:BufferGeometry, e:AssetEntry )
+	{
+		//_pack._geomMap.set( e.name, data );
+	}
 	
 	function onLoadData( data:String, e:AssetEntry ) 
 	{
 		_pack._fileMap.set( e.name, new File( data ) );
 	}
+}
+
+
+// haxelib's threejs hasn't this classes :(
+@:native("THREE.BufferGeometryLoader")
+extern class TemporaryBufGeomLoader {
+	public function new( manager:LoadingManager );
+	public function load( url:String, callback:BufferGeometry->Void ):Void;
+}
+
+extern class TemporaryGeomLoader {
+	public function new( manager:LoadingManager );
+	public function load( url:String, callback:Geometry->Void ):Void;
 }

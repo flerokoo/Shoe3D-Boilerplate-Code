@@ -172,7 +172,7 @@ class Assets
 		return null;	
 	}
 	
-	public static function getGeomDef( name:String ):GeomDef
+	/*public static function getGeomDef( name:String ):GeomDef
 	{
 		if ( _packMap == null ) throw 'No asset packs';
 		for ( i in _packMap )
@@ -183,7 +183,7 @@ class Assets
 		
 		throw 'No geomDef $name found';
 		return null;	
-	}
+	}*/
 	
 	public static function getFile( name:String ):File
 	{

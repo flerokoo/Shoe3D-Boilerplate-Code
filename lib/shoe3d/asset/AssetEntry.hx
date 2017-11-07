@@ -14,10 +14,13 @@ enum AssetFormat
 	MP3; M4A; OPUS; OGG; WAV; AAC;
 	
 	//geometry
-	GEOM;
+	GEOMETRY;
+
+	//buffergeometry
+	BUFFERGEOMETRY;
 	
-	//scene
-	SCENE;
+	//scene or object
+	OBJECT;
 	
 	//raw data
 	RAW;

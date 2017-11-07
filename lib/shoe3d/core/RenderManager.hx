@@ -1,4 +1,5 @@
 package shoe3d.core;
+import shoe3d.screen.GameScreen;
 import ext.RenderStats;
 import js.Browser;
 import js.html.DivElement;
@@ -84,18 +85,25 @@ class RenderManager
 		
 	}
 	
+	private static function renderScreen( screen:GameScreen ) 
+	{
+		renderer.setClearColor(clearColor);
+		renderer.clear( );
+		if( screen.layers != null ) 
+			for ( layer in screen.layers )
+				if( layer.visible ) layer.render( renderer );
+		
+	}
 	
 	private static function render() 
 	{		
 		renderer.setClearColor(clearColor);
 		renderer.clear( );
-		if ( System.screen._currentScreen != null  ) {
-			if( System.screen._currentScreen.layers != null )
-				for ( layer in System.screen._currentScreen.layers )
-					if( layer.visible ) layer.render( renderer );
-					//if( layer.camera != null /*&& layer.visible*/ )
-						//renderer.render( layer, layer.camera );
+		
+		if (System.screen._currentScreen != null) {
+			renderScreen(System.screen._currentScreen);
 		}
+
 		if ( stats != null ) stats.update( renderer );		
 	}
 	

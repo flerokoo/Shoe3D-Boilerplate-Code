@@ -3,6 +3,7 @@ import shoe3d.core.game.GameObject;
 import shoe3d.core.Time;
 import shoe3d.screen.transition.Transition;
 import shoe3d.util.Assert;
+import shoe3d.util.signal.*;
 import js.three.Scene;
 
 /**
@@ -20,6 +21,7 @@ class ScreenManager
 	private static var _prepared:Map<String,GameScreen>;
 	private static var _screens:Map<String,Class<GameScreen>>;
 	private static var _base:GameObject;
+	public static var onScreenChange(default,null):SingleSignal<String>;
 	
 	/**
 	 * Original game width
@@ -39,6 +41,7 @@ class ScreenManager
 	
 	private static function init() 
 	{
+
 		_transitions = new Map();
 		_screens = new Map();
 		_prepared = new Map();
@@ -46,7 +49,8 @@ class ScreenManager
 		defaultTransition = new Transition();
 		//defaultTransition.setHolder(_base);
 		//System._baseScene.add( _base );
-		
+
+		onScreenChange = new SingleSignal();		
 		System.window._prePublicResize.connect( recalcScale );	
 		return true;	
 	}
@@ -82,8 +86,14 @@ class ScreenManager
 			var transition:Transition = _transitions.exists( _currentScreenName + ">>" + name ) 
 				?  _transitions.get( _currentScreenName + ">>" + name ) 
 				: defaultTransition;
-				
+			
+			transition.onComplete.connect(function(){
+				onScreenChange.emit(name);
+			}).once();
+
+
 			transition.start( _currentScreen, _targetScreen );
+			
 		} 
 		else 
 		{
@@ -91,9 +101,8 @@ class ScreenManager
 			_currentScreen = _targetScreen;
 			if ( changeFn != null ) changeFn();
 			_currentScreen.onShow();
-		}
-		
-		Time.onScreenLoad();
+			onScreenChange.emit(name);
+		}		
 		
 	}
 	

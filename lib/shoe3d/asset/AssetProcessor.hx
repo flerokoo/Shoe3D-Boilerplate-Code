@@ -1,14 +1,10 @@
 package shoe3d.asset;
 import haxe.macro.Context;
 import haxe.macro.Expr.Field;
-import haxe.Serializer;
-import haxe.Unserializer;
 import shoe3d.asset.AssetEntry;
-import shoe3d.util.Tools;
 import sys.FileSystem;
 import haxe.io.Path;
 
-using StringTools;
 
 
 private typedef AssetInfo = { path:String, name:String, bytes:Int, ?pack:String, ?format:AssetFormat };
@@ -42,7 +38,7 @@ class AssetProcessor
 			pos: Context.currentPos()
 		};
 
-		trace(prepared);
+		//trace(prepared);
 		
 		/*switch( Context.getType("shoe3d.asset.AssetPackLoader")) {
 			case TInst( cl, _ ):				
@@ -61,26 +57,67 @@ class AssetProcessor
 	}
 	
 	static function processPackRecursive( localBase:String, packName:String, out:AssetCollection, pathToCurrentFolderFromPack = '' ) {		
-		var pathToCurrentFolderFromCWD = Path.join([localBase, packName, pathToCurrentFolderFromPack]);
-		trace(pathToCurrentFolderFromCWD);
+		var pathToCurrentFolderFromCWD = Path.join([localBase, packName, pathToCurrentFolderFromPack]);		
 		// iterating pack files recursively
 		for (name in FileSystem.readDirectory(pathToCurrentFolderFromCWD)) {
 			var pathToCurrentAssetFromCWD = Path.join([pathToCurrentFolderFromCWD, name]);
 			if ( FileSystem.isDirectory(pathToCurrentAssetFromCWD) ) {
 				processPackRecursive( localBase, packName, out, Path.join([pathToCurrentFolderFromPack, name]) );
-			} else {				
+			} else {		
+				var extra = [];
+				#if shoe3d_include_pack_name
+					extra.push(packName);
+				#end
+
 				out.push( {
 					path: pathToCurrentAssetFromCWD,
-					name: Path.join([packName, pathToCurrentFolderFromPack, name]),
+					name: Path.join(extra.concat([pathToCurrentFolderFromPack, name])),
 					bytes: FileSystem.stat(pathToCurrentAssetFromCWD).size,
-					format: getFormat()		
+					format: getFormat(pathToCurrentAssetFromCWD)		
 				});
+
+				trace(Path.join(extra.concat([pathToCurrentFolderFromPack, name])));
 			}
 		}
 	}
 
-	static function getFormat() : AssetFormat {
+	static function getFormat( path:String ) : AssetFormat 
+	{		
+		var ext = Path.extension(path).toLowerCase();
+		
+		if(ext == "json") {
+			var content = sys.io.File.getContent(path);
+			var parsed = null;
+			try {
+				parsed = haxe.Json.parse(content);
+			}
+
+			if( parsed != null ) {
+				var type:String = getDynamicValue(parsed, ["metadata", "type"]).toLowerCase();
+				switch(type){
+					case "object":
+						// TODO remove maps
+						return OBJECT;
+					case 'geometry':
+						return GEOMETRY;
+					case 'buffergeometry':
+						return BUFFERGEOMETRY;
+				}				
+			}
+						
+		}
 		return null;
+	}
+
+	static function getDynamicValue(o:Dynamic, path:Array<String>):Dynamic 
+	{
+		var cur = o;
+		while( path.length > 0 ) {
+			var nextField = path.shift();
+			cur = Reflect.field(cur, nextField);
+			if(cur == null) return null;
+		}
+		return cur;
 	}
 	
 }

@@ -14,7 +14,6 @@ class Main
 	static function main() 
 	{
 
-		trace(GameMeta.width, GameMeta.height);
 		// init and setting original game resolution (in which game is supposed to be)		
 		System.init(GameMeta.width, GameMeta.height);			
 
@@ -35,7 +34,7 @@ class Main
 		// Calls prepareGame after load is complete and show start button
 		// Calls startGame on button press
 		//NicePreloader.loadFolderFromAssets( "pack", prepareGame, startGame );			
-
+	
 		BasicPreloader.loadFolderFromAssets( "pack", function(pack){
 			prepareGame(pack);
 			startGame();

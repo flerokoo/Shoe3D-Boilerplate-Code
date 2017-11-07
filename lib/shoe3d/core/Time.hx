@@ -44,6 +44,7 @@ class Time
 		}			
 		_lastUpdateTime = _gameStartTime = now();
 		tick = new SingleSignal();
+		System.screen.onScreenChange.connect(onScreenLoad);
 		return true;
 	}
 	
@@ -63,7 +64,7 @@ class Time
 		
 	}
 	
-	private static function onScreenLoad() 
+	private static function onScreenLoad(?e) 
 	{
 		_screenShowTime = now();
 	}

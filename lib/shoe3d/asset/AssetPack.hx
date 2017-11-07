@@ -3,13 +3,15 @@ import shoe3d.util.Assert;
 import shoe3d.util.Log;
 import shoe3d.util.UVTools;
 import soundjs.SoundManager;
-import js.three.Geometry;
-import js.three.Material;
-import js.three.MeshPhongMaterial;
-import js.three.Object3D;
-import js.three.Texture;
 import shoe3d.util.UVTools.UV;
 import js.three.Vector2;
+import js.three.Geometry;
+import js.three.BufferGeometry;
+import js.three.Object3D;
+import js.three.Texture;
+import js.three.Material;
+import js.three.MeshPhongMaterial;
+import js.three.Mesh;
 /**
  * ...
  * @author as
@@ -21,11 +23,12 @@ class AssetPack
 	private var _texMap:Map<String,TexDef>;
 	private var _fileMap:Map<String,File>;
 	private var _geomMap:Map<String,Geometry>;
+	private var _bufGeomMap:Map<String,BufferGeometry>;
 	private var _soundMap:Map<String,String>; // map just to check if sound belongs to this asset pack
 	private var _atlasMap:Map<String,Atlas>;
 	private var _geomDefMap:Map<String,GeomDef>;
 	private var _fontMap:Map<String,Font>;
-	private var _sceneMap:Map<String,Object3D>;
+	private var _objectMap:Map<String,Object3D>;
 	
 	public function new(  ) 
 	{
@@ -33,9 +36,10 @@ class AssetPack
 		_fileMap = new Map();
 		_soundMap = new Map();
 		_geomMap = new Map();
+		_bufGeomMap = new Map();
 		_atlasMap = new Map();
 		_geomDefMap = new Map();
-		_sceneMap = new Map();
+		_objectMap = new Map();
 	}
 	
 	public function getAtlas( name:String )
@@ -68,7 +72,7 @@ class AssetPack
 		return _fontMap.get(name);
 	}
 	
-	public function createGeomDef( name:String, geomName:String, texDefName:String )
+	/*public function createMesh( name:String, geomName:String, texDefName:String ) : Mesh
 	{
 		if ( ! _geomMap.exists( geomName ) ) throw 'No geometry with name=$geomName';
 		if ( getTexDef( texDefName, false) == null) throw 'No texDef with name=$texDefName';
@@ -78,26 +82,19 @@ class AssetPack
 		
 		var newGeom = geom.clone();
 		UVTools.setGeometryUV( newGeom, texd.uv );
-		/*var geomDef:GeomDef = {
+		var geomDef:GeomDef = {
 			geom: newGeom,
 			texDef:texd,
 			originalUV: geom.faceVertexUvs,
 			material: new MeshPhongMaterial( {map: texd.texture, transparent: isTransparent} )
-		};*/
+		};
 		
 		var geomDef = new GeomDef( geom, texd, geom.faceVertexUvs );
 		
 		_geomDefMap.set( name, geomDef );
 		
 		return geomDef;
-	}
-	
-	public function getGeomDef( name:String, required:Bool = true ) 
-	{
-		var ret = _geomDefMap.get( name );
-		if ( ret == null && required ) throw 'No GeomDef with name=$name';
-		return ret;
-	}
+	}*/
 	
 	public function getTexDef( name:String, required:Bool = true ) 
 	{

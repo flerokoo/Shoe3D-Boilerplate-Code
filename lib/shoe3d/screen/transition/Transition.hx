@@ -1,18 +1,18 @@
 package shoe3d.screen.transition;
 import shoe3d.core.game.GameObject;
 import shoe3d.screen.GameScreen;
+import shoe3d.util.signal.*;
 import js.three.Scene;
 
-/**
- * ...
- * @author as
- */
+
 class Transition
 {
 
+	public var onComplete:ZeroSignal;
+
 	public function new() 
 	{
-		
+		onComplete = new ZeroSignal();
 	}
 	
 	public function start( currentScreen:GameScreen, targetScreen:GameScreen, ?fn:Void->Void ) 
@@ -22,7 +22,7 @@ class Transition
 		
 		if( currentScreen != null ) currentScreen.onHide();
 		if ( fn != null ) fn();
-		targetScreen.onShow();
+		targetScreen.onShow();	
 		
 		ScreenManager._currentScreen = targetScreen;
 		
@@ -31,7 +31,7 @@ class Transition
 	
 	public function end() 
 	{
-		
+		onComplete.emit();
 	}
 	
 }

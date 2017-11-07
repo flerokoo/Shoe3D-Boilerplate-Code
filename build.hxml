@@ -25,11 +25,16 @@
 -D shoe3d_game_version="1.0.0"
 
 
+
 ## Extra Flags
 
 # This will flatten you out coming JavaScript code to speed up the perforamce. 
 # But you will loose the the namespacing.
 # -D js-flatten
+
+# If set: Assetnames will contain pack name
+# "packName/someFolder/asset.ext" instead of "someFolder/asset.ext"
+# -D shoe3d_include_pack_name
 
 # Allow getting textures that come with scenes/objects with Assets.getTexture(...)
 # -D shoe3d_allow_textures
