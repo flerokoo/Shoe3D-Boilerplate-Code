@@ -15,6 +15,7 @@ var debug = args.release === undefined || !args.release;
 
 gulp.task( "compile", "Compile haxe code into js", function( callback ) {
     exec("haxe build.hxml" + ( debug ? ' -debug' : ''), function(err, sout, serr) {
+        console.log(sout)
         callback(err)
     })
 })
@@ -62,5 +63,9 @@ gulp.task( "build", "Compile, copy and bundle", sequence( ["compile", "copy-asse
         "release" : "Also minify final bundle and remove already bundled js files" 
     }
 });
+
+gulp.task( "clean", "Cleans build folder", function() {
+    del("build");
+})
 
 gulp.task( "default", false, ["help"])

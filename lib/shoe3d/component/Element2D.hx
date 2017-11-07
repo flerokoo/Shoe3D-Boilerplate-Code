@@ -46,7 +46,7 @@ class Element2D extends Component implements Pointable
 		if( preframeConnection == null ) {
 			preframeConnection = System._loop._preframe.connect(function(){
 				lastLevel = 0;
-			})
+			});
 		}
 	}
 	

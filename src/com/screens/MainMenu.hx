@@ -36,7 +36,7 @@ class MainMenu extends GameScreen
         var layer2d = newLayer2D("2d-layer", true);
         
         layer2d.addChild( new GameObject()
-            .add(new ImageSprite("jake"))     
+            .add(new ImageSprite("pack/jake"))     
             .add(new AutoPosition(true, true).setPos(0.5,0.5))       
         );
         

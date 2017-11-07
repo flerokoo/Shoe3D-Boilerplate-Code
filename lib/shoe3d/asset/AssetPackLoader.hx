@@ -47,10 +47,12 @@ class AssetPackLoader
 	public function add( name:String, url:String, bytes:Int, ?format:AssetFormat )
 	{
 		if ( format == null ) format = getFormat( url );
-		//if ( getFormat( name ) != RAW ) name = Tools.getFileNameWithoutExtension( name );
-		if ( format != RAW ) name = Tools.getFileNameWithoutExtension( name );
+		//if ( format != RAW ) name = Tools.getFileNameWithoutExtension( name );
+		if ( format != RAW ) name = haxe.io.Path.withoutExtension( name );
 		var ext = name.getUrlExtension();
 		
+		trace(name, format, url);
+
 		// TODO Придумать какой-то другой способ отличать геометрию от сцены и от просто json
 		if ( ext != null &&( ext.toLowerCase() == 'geom' || ext.toLowerCase() == 'scene' ) ) name = Tools.getFileNameWithoutExtension( name );
 		_entries.push( new AssetEntry( name, url, format, bytes ) );
@@ -230,12 +232,13 @@ class AssetPackLoader
 	
 	private function load() 
 	{
-		untyped __js__('createjs.Sound.alternateExtensions = ["aac, mp3"]');
+		untyped __js__('createjs.Sound.alternateExtensions = ["aac, ogg, mp3"]');
+
 		_manager = new LoadingManager( onCompletePack, onProgress );
 		for ( e in _entriesToLoad ) {
 			switch( e.format ) {				
-				case JPG, PNG, GIF:
-					new TextureLoader( _manager ).load( e.url, function( tex ) onLoadTexture( tex, e ) );					
+				case JPG, PNG, GIF, JXR, WEBP:
+					new TextureLoader( _manager ).load(e.url, function(tex) onLoadTexture(tex, e), null, onEntryLoadError);					
 				case MP3, M4A, OPUS, OGG, WAV:
 					new SoundLoader(_manager).load( e.url, e.name, _pack );
 				case GEOM:
@@ -252,6 +255,10 @@ class AssetPackLoader
 
 
 	// CALLBACKS
+
+	function onEntryLoadError(e:js.html.ErrorEvent) {
+		js.Browser.console.log("Error happened when loading: " + e);
+	}
 
 	function onLoadScene(object:Scene, e:AssetEntry) 
 	{
@@ -275,7 +282,7 @@ class AssetPackLoader
 		tex.minFilter = untyped __js__("THREE.LinearFilter");
 		tex.magFilter = untyped __js__("THREE.LinearFilter");
 		//tex.minFilter = untyped __js__("THREE.NearestFilter");
-		//tex.magFilter = untyped __js__("THREE.NearestFilter");
+		//tex.magFilter = untyped __js__("THREE.NearestFilter");		
 		_pack._texMap.set( e.name, 
 		{
 			texture: tex, 

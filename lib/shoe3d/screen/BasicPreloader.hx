@@ -1,5 +1,6 @@
 package shoe3d.screen;
-import shoe3d.asset.AssetPack;
+import shoe3d.asset.Assets.LoadingTaskHandle;
+import shoe3d.asset.*;
 import shoe3d.component.AutoPosition;
 import shoe3d.component.FillSprite;
 import shoe3d.core.game.GameObject;
@@ -51,7 +52,7 @@ class BasicPreloader extends GameScreen
 		}
 	}
 	
-	public static function loadFolderFromAssets( folder:String, onSuccess:AssetPack->Void, ?registerThisPackWithName:String ):Promise<AssetPack>
+	public static function loadFolderFromAssets( folder:String, onSuccess:AssetPack->Void ):LoadingTaskHandle
 	{
 		if ( loading ) throw 'Can not load more that one asset pack at time';
 		
@@ -61,14 +62,18 @@ class BasicPreloader extends GameScreen
 		progress._ = 0;
 		loading = true;
 		
-		return System.loadFolderFromAssets(
-			folder, 
-			function(a:AssetPack) {
-				loading = false;
-				onSuccess(a);
-			},
-			function( p:Float ) progress._ = p , 
-			registerThisPackWithName);
+		var handle = Assets.addToQueue( folder, true );
+
+		handle.onComplete.connect( function(a){
+			loading = false;
+			onSuccess(a);
+		}).once();
+
+		handle.onProgress.connect(function(p){
+			progress._ = p;
+		});
+
+		return handle;
 		
 	}
 

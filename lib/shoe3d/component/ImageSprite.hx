@@ -1,6 +1,6 @@
 package shoe3d.component;
 import shoe3d.asset.AssetPack.TexDef;
-import shoe3d.asset.Res;
+import shoe3d.asset.Assets;
 import shoe3d.util.Assert;
 import js.three.Geometry;
 import js.three.Mesh;
@@ -25,7 +25,7 @@ class ImageSprite extends Element2D
 	{
 		super();
 		
-		texDef = Res.getTexDef( textureName );
+		texDef = Assets.getTexDef( textureName );
 		geom = new PlaneGeometry(0, 0, 1, 1);
 		material = new MeshBasicMaterial( { transparent: true, side: js.Three.DoubleSide, depthTest: false, depthWrite: false } );	
 		mesh = new Mesh( geom, material );		

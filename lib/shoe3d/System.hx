@@ -3,7 +3,7 @@ import js.Browser;
 import js.html.DivElement;
 import shoe3d.asset.AssetPack;
 import shoe3d.asset.AssetPackLoader;
-import shoe3d.asset.Res;
+import shoe3d.asset.Assets;
 import shoe3d.core.game.GameObject;
 import shoe3d.core.InputManager;
 import shoe3d.core.MainLoop;
@@ -180,26 +180,7 @@ class System
 			Browser.document.body.removeChild( _info );
 			#end
 	}
-	
-	public static function loadFolderFromAssets( folder:String, ?onSuccess:AssetPack->Void, ?onProgress:Float->Void, ?registerThisPackWithName:String ):Promise<AssetPack>
-	{
-		var ldr = new AssetPackLoader();
-		
-		for ( i in AssetPackLoader.localPacks )
-			if ( i.pack == folder ) {
-				ldr.add( i.name, i.path, i.bytes );
-			}
-		
-		var promise = ldr.start( onSuccess, onProgress );
-		
-		promise.success.connect(
-				function(pack:AssetPack)
-					Res.registerPack( pack, registerThisPackWithName ),
-					true
-					).once();
-		return promise;		
-	}
-	
+
 	#if debug
 	public static function addInfo( text:Dynamic, breakLine:Bool = true ) 
 	{

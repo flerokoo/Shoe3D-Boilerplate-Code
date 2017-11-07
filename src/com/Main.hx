@@ -1,8 +1,7 @@
 package com;
 
 import shoe3d.*;
-import shoe3d.asset.AssetPack;
-import shoe3d.asset.Font;
+import shoe3d.asset.*;
 import shoe3d.screen.BasicPreloader;
 class Main 
 {
@@ -38,15 +37,18 @@ class Main
 			prepareGame(pack);
 			startGame();
 		});
+		
 	}	
 	
 	static function prepareGame( pack:AssetPack )
 	{
 		System.screen.addScreen( 'mainMenu', com.screens.MainMenu );
+		trace("PREPS");
 	}
 	
 	static function startGame( )
 	{
-		System.screen.show( 'mainMenu' );			
+		System.screen.show( 'mainMenu' );		
+		trace("STARTING");	
 	}
 }
