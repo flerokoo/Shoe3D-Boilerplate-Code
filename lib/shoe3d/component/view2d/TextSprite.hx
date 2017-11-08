@@ -1,20 +1,14 @@
-package shoe3d.component;
-import com.Main;
-import js.Browser;
-import js.html.Float32Array;
+package shoe3d.component.view2d;
 //import js.html.svg.Color;
 import shoe3d.asset.Font;
-import shoe3d.component.Element2D;
+import shoe3d.component.view2d.Element2D;
 import shoe3d.util.Log;
 import shoe3d.util.math.Rectangle;
-import shoe3d.util.SMath;
 import js.three.Face3;
 import js.three.Geometry;
 import js.three.ImmediateRenderObject;
 import js.three.Mesh;
 import js.three.MeshBasicMaterial;
-import js.three.RawShaderMaterial;
-import js.three.Side;
 import js.three.Vector2;
 import js.three.Vector3;
 
@@ -212,7 +206,7 @@ class TextSprite extends Element2D
 			if ( lastUUID == null || lastUUID != gl.page.texture.uuid ) {
 				//if ( pair != null ) trace(pair.mesh.name, pair.num);
 				if ( lastPairIndex >= _pairs.length ) {
-					var mat = new MeshBasicMaterial( { map: gl.page.texture, transparent: true, side: Side.DoubleSide, wireframe: false  } );
+					var mat = new MeshBasicMaterial( { map: gl.page.texture, transparent: true, side: js.Three.DoubleSide, wireframe: false  } );
 					pair = { 
 						mesh: new Mesh(new Geometry(), mat ), 
 						mat: mat,
@@ -229,7 +223,7 @@ class TextSprite extends Element2D
 				pair.num = 0;
 				// TODO update vertices without creating new geometry
 				pair.mesh.geometry = new Geometry();
-				var geom = pair.mesh.geometry;
+				var geom:Geometry = pair.mesh.geometry;
 				geom.vertices = [];
 				geom.faceVertexUvs = [[]];
 				geom.faces = [];
@@ -241,7 +235,7 @@ class TextSprite extends Element2D
 				}
 			}
 				
-			var geom = pair.mesh.geometry;
+			var geom:Geometry = pair.mesh.geometry;
 			
 			// create vertices, faces and uvs
 			// face scheme

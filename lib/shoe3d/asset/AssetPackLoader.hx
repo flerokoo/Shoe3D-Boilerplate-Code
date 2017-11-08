@@ -46,7 +46,7 @@ class AssetPackLoader
 		_entries = [];	
 	}
 	
-	public function add( name:String, url:String, bytes:Int, ?format:AssetFormat )
+	public function add( name:String, url:String, bytes:Int, ?format:AssetFormat, ?params:Dynamic )
 	{
 		if ( format == null ) format = getFormat( url );
 		//if ( format != RAW ) name = Tools.getFileNameWithoutExtension( name );
@@ -55,7 +55,7 @@ class AssetPackLoader
 
 		// TODO Придумать какой-то другой способ отличать геометрию от сцены и от просто json
 		if ( ext != null &&( ext.toLowerCase() == 'geom' || ext.toLowerCase() == 'scene' ) ) name = Tools.getFileNameWithoutExtension( name );
-		_entries.push( new AssetEntry( name, url, format, bytes ) );
+		_entries.push( new AssetEntry( name, url, format, bytes, params ) );
 	}
 	
 	function getFormat( url:String ):AssetFormat
@@ -199,7 +199,7 @@ class AssetPackLoader
 	{
 		if ( _supportedFormats == null )
 			detectImageFormats( function ( imgFormats:Array<AssetFormat> ) {
-				_supportedFormats = imgFormats.concat( detectAudioFormats() ).concat( [ RAW, GEOMETRY, BUFFERGEOMETRY, OBJECT ] );
+				_supportedFormats = imgFormats.concat( detectAudioFormats() ).concat( [ RAW, GEOMETRY, BUFFERGEOMETRY, OBJECT, ATLAS ] );
 				fn( _supportedFormats );
 			} )
 		else
@@ -238,7 +238,12 @@ class AssetPackLoader
 				case GEOMETRY:
 					new TemporaryGeomLoader(_manager).load(e.url, function(data) onLoadGeometry(data, e), null, onEntryLoadError);
 				case OBJECT:
-					new ObjectLoader(_manager).load( e.url, function (data) { onLoadObject( data, e ); trace(data); }, null, onEntryLoadError );
+					// cant use ObjectLoader because of wrong order of events
+					// https://github.com/mrdoob/three.js/issues/12601
+					//new ObjectLoader(_manager).load( e.url, function (data) { onLoadObject( data, e ); trace(data); }, null, onEntryLoadError );
+					new FileLoader( _manager ).load( e.url, function(t) onLoadObjectFromJson(t, e), null, onEntryLoadError );
+				case ATLAS:
+					new AtlasLoader( _manager ).load( e.url, e.extra.image, e.name, _pack, onEntryLoadError);
 				default:
 					new FileLoader(_manager).load( e.url, function (data) onLoadData( data, e ), null, onEntryLoadError );
 				
@@ -256,7 +261,22 @@ class AssetPackLoader
 
 	function onLoadObject(object:Object3D, e:AssetEntry) 
 	{
-		trace("OBJECT LOADED " + e.name);
+		_pack._objectMap.set(e.name, object);
+	}
+
+	function onLoadObjectFromJson(data:String, e:AssetEntry)
+	{
+		// this callback will fire BEFORE images are loaded
+		// but, object still will be available in assetPack (as opposed to ObjectLoader)
+		var object = null;
+		try {
+			var l = new ObjectLoader();
+			l.setTexturePath( haxe.io.Path.directory(e.url) + "/" );
+			object = l.parse( haxe.Json.parse(data) );
+		} catch (t:String) {
+			Log.warn( 'Couldnt parse object ${e.name}: $t' );
+		}
+ 		
 		_pack._objectMap.set(e.name, object);
 	}
 		
@@ -268,17 +288,12 @@ class AssetPackLoader
 	
 	function onCompletePack() 
 	{
-		trace("PACL LOADED");
 		_promise.result = _pack;
 		if ( _onCompleteCallback != null ) _onCompleteCallback( _pack );
 	}
 	
 	function onLoadTexture( tex:Texture, e:AssetEntry ) 
-	{
-		tex.minFilter = untyped __js__("THREE.LinearFilter");
-		tex.magFilter = untyped __js__("THREE.LinearFilter");
-		//tex.minFilter = untyped __js__("THREE.NearestFilter");
-		//tex.magFilter = untyped __js__("THREE.NearestFilter");		
+	{		
 		_pack._texMap.set( e.name, 
 		{
 			texture: tex, 
@@ -315,6 +330,25 @@ class AssetPackLoader
 	function onLoadData( data:String, e:AssetEntry ) 
 	{
 		_pack._fileMap.set( e.name, new File( data ) );
+	}
+
+
+	// GENERATORS
+	public static function wrapTexDef( tex:Texture, ?uv:shoe3d.util.UVTools.UV ) : shoe3d.asset.AssetPack.TexDef
+	{
+		return {
+			texture: tex, 
+			uv: uv != null 
+				? uv 
+				: {
+					umin: 0,
+					vmin: 0,
+					umax: 1,
+					vmax: 1
+				},
+			width: (tex.image.width != null ? tex.image.width : tex.image.naturalWidth ),
+			height: (tex.image.height != null ? tex.image.height : tex.image.naturalHeight )
+		}
 	}
 }
 

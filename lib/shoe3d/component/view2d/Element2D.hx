@@ -1,4 +1,4 @@
-package shoe3d.component;
+package shoe3d.component.view2d;
 import shoe3d.core.game.Component;
 import shoe3d.core.game.GameObject;
 import shoe3d.core.input.PointerEvent;

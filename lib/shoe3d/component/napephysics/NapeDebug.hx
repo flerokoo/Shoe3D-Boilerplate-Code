@@ -19,6 +19,9 @@ class NapeDebug extends Component
 	var _lines:LineSegments;
 	var _verts:Array<Vector3>;
 	var _geom:Geometry;
+
+	var _firstComponentIndex = 0;
+	var _secondComponentIndex = 1;
 	
 	
 	public function new( space:NapeSpace, ?color:Int ) 
@@ -31,10 +34,12 @@ class NapeDebug extends Component
 		_geom.vertices = _verts;		
 		_lines = new LineSegments( _geom, material );
 		_lines.frustumCulled = false;
+
 	}
 	
 	override public function onAdded() 
 	{
+		
 		super.onAdded();
 		owner.transform.add( _lines );
 	}
@@ -54,9 +59,13 @@ class NapeDebug extends Component
 					var prev = len - 1;
 					while ( cur < len ) {
 						var curVert = verts.at(cur);
-						var prevVert = verts.at(prev);
-						_verts[vi++].set( prevVert.x, 0, prevVert.y );
-						_verts[vi++].set( curVert.x, 0, curVert.y );
+						var prevVert = verts.at(prev);												
+						_verts[vi].setComponent(_firstComponentIndex, prevVert.x );
+						_verts[vi].setComponent(_secondComponentIndex, prevVert.y );					
+						vi++;
+						_verts[vi].setComponent( _firstComponentIndex, curVert.x );
+						_verts[vi].setComponent(_secondComponentIndex, curVert.y );
+						vi++;
 						cur++;
 						prev = cur - 1;
 					}
@@ -69,21 +78,23 @@ class NapeDebug extends Component
 					var radius = circle.radius;
 					var cx = body.position.x;
 					var cy = body.position.y;
-					_verts[vi++].set( body.position.x, 0, body.position.y );
-					_verts[vi++].set( cx + radius * Math.cos(angle), 0 , cy + radius * Math.sin(angle) );
-					 
+
+					
+					_verts[vi].setComponent(_firstComponentIndex, body.position.x);
+					_verts[vi].setComponent(_secondComponentIndex, body.position.y);
+					vi++;
+
+					_verts[vi].setComponent(_firstComponentIndex, cx + radius * Math.cos(angle));
+					_verts[vi].setComponent(_secondComponentIndex, cy + radius * Math.sin(angle));
+					vi++;
+
 					for ( i in 0...circleQuality ) {
-						_verts[vi++].set( 
-								cx + radius * Math.cos( angle + (i - 1) * alpha ), 
-								0 , 
-								cy + radius * Math.sin( angle + (i - 1) * alpha ) 
-							);
-						_verts[vi++].set( 
-								cx + radius * Math.cos( angle + (i) * alpha ), 
-								0 , 
-								cy + radius * Math.sin( angle + (i) * alpha ) 
-							);
-												
+						_verts[vi].setComponent(_firstComponentIndex, cx + radius * Math.cos( angle + (i - 1) * alpha ));
+						_verts[vi].setComponent(_secondComponentIndex, cy + radius * Math.sin( angle + (i - 1) * alpha ));
+						vi++;
+						_verts[vi].setComponent(_firstComponentIndex, cx + radius * Math.cos( angle + (i) * alpha ));
+						_verts[vi].setComponent(_secondComponentIndex, cy + radius * Math.sin( angle + (i) * alpha ));
+						vi++;			
 					}
 				} // circle
 				

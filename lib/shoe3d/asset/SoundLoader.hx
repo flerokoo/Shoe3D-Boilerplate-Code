@@ -41,9 +41,9 @@ class SoundLoader extends Loader
 	}
 	
 	private function onLoad( evt )
-	{			
-		
-		//if ( Tools.getFileNameWithoutExtensionAndPath( evt.src ) == _id ) {
+	{		
+		// TODO Redo sound registration in pack
+		// (Why id to url map?)
 		if( evt.src.indexOf( _id ) >= 0 ) {
 			_pack._soundMap.set( _id, _url );
 			_manager.itemEnd(_url);			

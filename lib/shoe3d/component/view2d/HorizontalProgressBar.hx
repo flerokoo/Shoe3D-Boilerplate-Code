@@ -1,4 +1,4 @@
-package shoe3d.component;
+package shoe3d.component.view2d;
 import shoe3d.util.signal.DoubleSignal;
 import shoe3d.util.SMath;
 import shoe3d.util.Value;

@@ -7,8 +7,9 @@ import haxe.io.Path;
 
 
 
-private typedef AssetInfo = { path:String, name:String, bytes:Int, ?pack:String, ?format:AssetFormat };
+private typedef AssetInfo = { path:String, name:String, bytes:Int, ?pack:String, ?format:AssetFormat, ?extra:Dynamic };
 private typedef AssetCollection = Array<AssetInfo>;
+private typedef FormatCheckResult = { format:AssetFormat, ?extra:Dynamic }
 class AssetProcessor
 {
 
@@ -85,17 +86,21 @@ class AssetProcessor
 				#if shoe3d_include_pack_name
 					extra.push(packName);
 				#end
+
+				var result = getFormat( pathToCurrentAssetFromCWD );
+
 				out.push( {
 					path: pathToCurrentAssetFromCWD,
 					name: Path.join(extra.concat([pathToCurrentFolderFromPack, name])),
 					bytes: FileSystem.stat(pathToCurrentAssetFromCWD).size,
-					format: getFormat(pathToCurrentAssetFromCWD)		
+					format: result != null ? result.format : null,
+					extra: result != null ? result.extra : null
 				});
 			}
 		}
 	}
 
-	static function getFormat( path:String ) : AssetFormat 
+	static function getFormat( path:String ) : FormatCheckResult 
 	{		
 		var ext = Path.extension(path).toLowerCase();
 		
@@ -107,26 +112,50 @@ class AssetProcessor
 			}
 
 			if( parsed != null ) {
-				var type:String = getDynamicValue(parsed, ["metadata", "type"]).toLowerCase();
-				switch(type){
-					case "object":
-						#if shoe3d_allow_textures
-						var images:Array<Dynamic> = getDynamicValue(parsed, ["images"]);
-						for( i in images ) {
-							var dir = Path.directory(path);
-							var name = i.name;
-							_remove.push(Path.join([dir, name]));
-						}						
-						#end
-						return OBJECT;
-					case 'geometry':
-						return GEOMETRY;
-					case 'buffergeometry':
-						return BUFFERGEOMETRY;
-				}				
+				
+				var result:FormatCheckResult = isThreeJsEntity( parsed, path );
+				if( result != null ) return result;
+
+				result = isAtlas( parsed, path );
+				if( result != null ) return result;
 			}
 						
 		}
+		return null;
+	}
+
+	static function isAtlas( parsed:Dynamic, path:String ) : FormatCheckResult {
+		var image = getDynamicValue(parsed, ['meta', 'image']).toLowerCase();
+		if( image != null ) {
+			var imgPath = Path.join( [Path.directory(path), image] );
+			#if !shoe3d_allow_textures
+			_remove.push(imgPath);			
+			#end
+			return { format: ATLAS, extra: {image: imgPath} };
+		}
+		return null;
+	}
+
+	static function isThreeJsEntity(parsed:Dynamic, path:String) : FormatCheckResult {
+		var type:String = getDynamicValue(parsed, ["metadata", "type"]);				
+		if( type != null ) {
+			switch(type.toLowerCase()){
+				case "object":
+					#if !shoe3d_allow_textures
+					var images:Array<Dynamic> = getDynamicValue(parsed, ["images"]);
+					for( i in images ) {
+						var dir = Path.directory(path);
+						var name = i.name;
+						_remove.push(Path.join([dir, name]));
+					}						
+					#end
+					return { format: OBJECT };
+				case 'geometry':
+					return { format: GEOMETRY };
+				case 'buffergeometry':
+					return { format: BUFFERGEOMETRY };
+			}
+		}	
 		return null;
 	}
 

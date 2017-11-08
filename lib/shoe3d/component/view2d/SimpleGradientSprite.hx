@@ -1,7 +1,6 @@
-package shoe3d.component;
+package shoe3d.component.view2d;
 import js.Three;
 import js.three.Color;
-import js.three.Colors;
 
 /**
  * ...

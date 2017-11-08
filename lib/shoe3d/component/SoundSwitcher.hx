@@ -16,7 +16,7 @@ class SoundSwitcher extends Component
 	}
 	
 	override public function onAdded() {
-		owner.add( new ScaleButton( switchSound) );
+		owner.add(new ScaleButton(switchSound));
 	}
 	
 	public function switchSound(?e) {

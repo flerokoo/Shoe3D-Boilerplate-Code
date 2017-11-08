@@ -3,13 +3,6 @@ import haxe.Json;
 import shoe3d.asset.AssetPack.TexDef;
 import shoe3d.util.math.Rectangle;
 import shoe3d.util.UVTools.UV;
-import js.three.Texture;
-
-/**
- * ...
- * @author as
- */
-
 
 
 
@@ -33,11 +26,6 @@ class Atlas
 		this.image = image;
 		if ( json != null ) {
 			parseJSON( json );
-		}
-		
-		for ( i in _texMap.keys() )
-		{
-			//trace( '$i => ${_texMap.get(i).uv}' );
 		}
 	}
 	
@@ -65,7 +53,10 @@ class Atlas
 		else if (type == ShoeBox ) 
 			parseShoeBox( json );
 		else if ( type == Auto  || type == null ) {
-			var a:Dynamic = Json.parse( json );
+			var a:Dynamic;
+			try	a = Json.parse( json )
+			catch (e:Dynamic) throw 'Can\' parse atlas json';
+
 			if ( Reflect.hasField( a, "frames") && Reflect.hasField( a, "meta" ) ) {
 				if ( Std.is( Reflect.field(a, "frames") , Array  ) )
 					parseTexturePacker( json )
@@ -81,7 +72,7 @@ class Atlas
 	{		
 		var a:Dynamic = null;
 		try	a = Json.parse( json )
-		catch (e:Dynamic) throw 'Can\' parse json';
+		catch (e:Dynamic) throw 'Can\' parse atlas json';
 		
 		if ( ! Reflect.hasField( a, "frames") && ! Reflect.hasField( a, "meta" ) ) throw 'Wrong JSON Format';		
 		

@@ -1,4 +1,4 @@
-package shoe3d.component;
+package shoe3d.component.light;
 import shoe3d.core.game.Component;
 import js.three.AmbientLight;
 import js.three.DirectionalLight;

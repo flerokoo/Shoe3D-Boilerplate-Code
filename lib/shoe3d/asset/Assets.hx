@@ -1,6 +1,5 @@
 package shoe3d.asset;
 import shoe3d.util.Assert;
-import shoe3d.asset.AssetPack.GeomDef;
 import shoe3d.asset.AssetPack.TexDef;
 import shoe3d.util.Log;
 import shoe3d.util.promise.Promise;
@@ -33,6 +32,9 @@ class Assets
 	static var _queue:Array<LoadingTask>;
 	static var _packMap:Map<String,AssetPack>;
 	
+
+	// LOADING MANAGEMENT
+	
 	public static function registerPack( pack:AssetPack, ?name:String ) 
 	{
 		if ( _packMap == null ) _packMap = new Map();
@@ -61,7 +63,7 @@ class Assets
 		
 		for ( i in AssetPackLoader.localPacks )
 			if ( i.pack == folder ) {
-				ldr.add( i.name, i.path, i.bytes, i.format );
+				ldr.add( i.name, i.path, i.bytes, i.format, i.extra );
 			}
 		
 		var promise = ldr.start( onSuccess, onProgress );
@@ -160,42 +162,14 @@ class Assets
 		return r;
 	}
 	
-	public static function getTexDef( name:String, ?fromPack:String ):TexDef
-	{		
-		if ( _packMap == null ) throw 'No asset packs';
-
-		if(fromPack != null) 
-			return getPack(fromPack).getTexDef(name);
-
-		for ( i in _packMap )
-		{
-			var ret = i.getTexDef( name, false );
-			if ( ret != null) return ret;
-		}
-		
-		throw 'No texDef $name found';
-		return null;	
-	}
-	
-	/*public static function getGeomDef( name:String ):GeomDef
-	{
-		if ( _packMap == null ) throw 'No asset packs';
-		for ( i in _packMap )
-		{
-			var ret = i.getGeomDef( name, false );
-			if ( ret != null) return ret;
-		}
-		
-		throw 'No geomDef $name found';
-		return null;	
-	}*/
-	
 	public static function getFile(name:String, ?fromPack:String):File
 	{
 		if ( _packMap == null ) throw 'No asset packs';
 
-		if(fromPack != null) 
+		if(fromPack != null) {
+			Assert.that( getPack(fromPack) != null );
 			return getPack(fromPack).getFile(name);
+		}
 
 		for ( i in _packMap )
 		{
@@ -204,6 +178,25 @@ class Assets
 		}
 		
 		throw 'No file $name found';
+		return null;	
+	}
+
+	public static function getTexDef(name:String, ?fromPack:String, lookInAtlases:Bool = true):TexDef
+	{
+		if ( _packMap == null ) throw 'No asset packs';
+
+		if(fromPack != null) {
+			Assert.that( getPack(fromPack) != null );
+			return getPack(fromPack).getTexDef(name, true, lookInAtlases);
+		}
+
+		for ( i in _packMap )
+		{
+			var ret = i.getTexDef( name, false, lookInAtlases );
+			if ( ret != null ) return ret;
+		}
+		
+		throw 'No texDef $name found';
 		return null;	
 	}
 

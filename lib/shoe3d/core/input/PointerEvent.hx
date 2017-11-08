@@ -1,5 +1,5 @@
 package shoe3d.core.input;
-import shoe3d.component.Element2D;
+import shoe3d.component.view2d.Element2D;
 import shoe3d.core.Layer2D;
 
 /**

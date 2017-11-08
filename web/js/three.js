@@ -34463,6 +34463,7 @@
 			var textures = this.parseTextures( json.textures, images );
 			var materials = this.parseMaterials( json.materials, textures );
 
+
 			var object = this.parseObject( json.object, geometries, materials );
 
 			if ( json.animations ) {
@@ -34922,7 +34923,7 @@
 					return materials[ name ];
 
 				}
-
+				
 				switch ( data.type ) {
 
 					case 'Scene':

@@ -1,0 +1,20 @@
+{
+"frames": {
+	"branch.png": {
+		"frame": {"x":0, "y":459, "w":343, "h":458},
+		"spriteSourceSize": {"x":65,"y":19,"w":512,"h":512},
+		"sourceSize": {"w":512,"h":512}
+	},
+	"branch2.png": {
+		"frame": {"x":0, "y":0, "w":343, "h":458},
+		"spriteSourceSize": {"x":65,"y":19,"w":512,"h":512},
+		"sourceSize": {"w":512,"h":512}
+	}
+
+},
+"meta": {
+	"image": "sprites.png",
+	"size": {"w": 512, "h": 1024},
+	"scale": "1"
+}
+}

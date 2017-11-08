@@ -2,7 +2,7 @@ package shoe3d.screen;
 import shoe3d.asset.Assets.LoadingTaskHandle;
 import shoe3d.asset.*;
 import shoe3d.component.AutoPosition;
-import shoe3d.component.FillSprite;
+import shoe3d.component.view2d.FillSprite;
 import shoe3d.core.game.GameObject;
 import shoe3d.core.Layer2D;
 import shoe3d.System;

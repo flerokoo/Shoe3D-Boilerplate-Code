@@ -1,6 +1,6 @@
 -main com.Main
 -js build/js/game.js
--dce full
+-dce std
 
 
 ## Classpaths
@@ -11,6 +11,7 @@
 ## Libraries
 -lib actuate
 -lib threejs
+# -lib nape
 
 
 ## Game Meta Flags

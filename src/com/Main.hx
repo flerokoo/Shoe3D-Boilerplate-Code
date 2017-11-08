@@ -36,7 +36,6 @@ class Main
 		//NicePreloader.loadFolderFromAssets( "pack", prepareGame, startGame );			
 	
 		BasicPreloader.loadFolderFromAssets( "pack", function(pack){
-			js.Browser.console.log(pack);
 			prepareGame(pack);
 			startGame();
 		});

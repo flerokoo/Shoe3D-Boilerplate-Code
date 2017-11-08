@@ -2,7 +2,7 @@ package shoe3d.component;
 import motion.Actuate;
 import motion.easing.Linear;
 import motion.easing.Quad;
-import shoe3d.component.FillSprite;
+import shoe3d.component.view2d.FillSprite;
 import shoe3d.core.game.Component;
 import shoe3d.System;
 import shoe3d.util.Disposable;

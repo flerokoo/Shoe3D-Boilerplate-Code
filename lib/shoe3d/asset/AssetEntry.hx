@@ -22,6 +22,9 @@ enum AssetFormat
 	//scene or object
 	OBJECT;
 	
+	//atlas
+	ATLAS;
+
 	//raw data
 	RAW;
 }
@@ -34,14 +37,15 @@ class AssetEntry
 	public var url(default, null):String;
 	public var format(default, null):AssetFormat;
 	public var bytes(default, null):Int;
+	public var extra(default, null):Dynamic;
 	
-	public function new( name:String, url:String, format:AssetFormat, bytes:Int ) 
+	public function new( name:String, url:String, format:AssetFormat, bytes:Int, extra:Dynamic ) 
 	{
 		this.name = name;
 		this.url = url;
 		this.format = format;
-		this.bytes = bytes;
-		
+		this.bytes = bytes;		
+		this.extra = extra;		
 	}
 	
 }

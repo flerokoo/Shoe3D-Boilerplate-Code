@@ -1,5 +1,5 @@
-package shoe3d.component;
-import shoe3d.component.Element2D;
+package shoe3d.component.view2d;
+import shoe3d.component.view2d.Element2D;
 import shoe3d.core.game.Component;
 import shoe3d.util.SMath;
 import js.three.Blending;

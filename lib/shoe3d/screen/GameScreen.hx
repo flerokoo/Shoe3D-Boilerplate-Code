@@ -1,7 +1,6 @@
 package shoe3d.screen;
 import js.html.Screen;
 import shoe3d.component.CameraHolder;
-import shoe3d.component.RandomRotator;
 import shoe3d.core.game.GameObject;
 import shoe3d.core.Layer;
 import shoe3d.core.Layer2D;

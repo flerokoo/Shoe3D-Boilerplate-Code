@@ -3,6 +3,7 @@ import nape.geom.Vec2;
 import nape.space.Broadphase;
 import nape.space.Space;
 import shoe3d.core.game.Component;
+import shoe3d.core.Time;
 
 /**
  * ...
@@ -10,9 +11,12 @@ import shoe3d.core.game.Component;
  */
 class NapeSpace extends Component
 {
-	public var space(default, null):Space;
+	public var timestep:Float = 1/30;
+	public var space(default, null):Space;	
+	var _accumulatedTime = 0.0;
 	
-	public function new( grav:Vec2 = null, broadphase:Broadphase = null) 
+
+	public function new(grav:Vec2 = null, broadphase:Broadphase = null) 
 	{
 		super();
 		space = new Space(grav, broadphase);
@@ -21,13 +25,19 @@ class NapeSpace extends Component
 	override public function onUpdate() 
 	{
 		super.onUpdate();
-		space.step( 1 / 60 );		
+
+		_accumulatedTime += Time.dt;
+		
+		while(_accumulatedTime >= timestep) {
+			space.step( timestep );	
+			_accumulatedTime -= timestep;	
+		}
 	}
 	
 	override public function dispose() 
 	{
 		super.dispose();
-		space =  null;
+		space = null;
 	}
 	
 }

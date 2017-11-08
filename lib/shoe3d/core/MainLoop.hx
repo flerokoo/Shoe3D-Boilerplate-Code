@@ -2,7 +2,7 @@ package shoe3d.core;
 import haxe.Timer;
 import js.Browser;
 //import js.html.RequestAnimationFrameCallback;
-import shoe3d.component.Element2D;
+import shoe3d.component.view2d.Element2D;
 import shoe3d.core.game.GameObject;
 import shoe3d.screen.ScreenManager;
 import shoe3d.util.signal.SingleSignal;
