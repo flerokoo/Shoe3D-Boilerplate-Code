@@ -44,3 +44,6 @@
 # Disabled by default for the sake of performance
 # -D shoe3d_enable_late_update
 
+# Sitelock to list of urls
+# Use LevelCodeList.check() here and there to check if in one of these sites
+# -D shoe3d_allow_urls="someurl.ru;someotherurl.com"

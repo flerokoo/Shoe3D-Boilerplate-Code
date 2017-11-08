@@ -17,7 +17,7 @@ class LevelCodeFormatter
 	
 	/*
 	 * HOW TO USE
-	 * add -D allowURL=url1.ru;url2.com
+	 * add -D shoe3d_allow_urls="url1.ru;url2.com"
 	 * after use here and there LevelCodeList.check()
 	 * 
 	 */ 
@@ -31,8 +31,8 @@ class LevelCodeFormatter
 
 		
 		var ret = [];
-		if ( Context.defined("allowURL") ) {
-			var list = Context.definedValue("allowURL").split(";");		
+		if ( Context.defined("shoe3d_allow_urls") ) {
+			var list = Context.definedValue("shoe3d_allow_urls").toLowerCase().split(";");		
 			
 			trace("Allow URLs: " + list );			
 			for ( i in list ) ret.push( Base64.encode( Bytes.ofString(i) ) );			
