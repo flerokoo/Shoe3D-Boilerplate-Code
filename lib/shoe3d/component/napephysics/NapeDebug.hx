@@ -103,6 +103,12 @@ class NapeDebug extends Component
 		}
 		_geom.verticesNeedUpdate = true;		
 	}
+
+	public function setCoordinatesMapping( x:Int, y:Int ) {
+		_firstComponentIndex = x;
+		_secondComponentIndex = y;
+		return this;
+	}
 	
 	override public function onRemoved() 
 	{

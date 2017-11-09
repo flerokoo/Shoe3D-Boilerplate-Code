@@ -1,5 +1,6 @@
 package shoe3d.component.view3d;
 
+import shoe3d.asset.Assets;
 import shoe3d.core.game.Component;
 import js.three.Geometry;
 import js.three.BufferGeometry;
@@ -34,6 +35,12 @@ class ObjectView extends Component
 		// so untyped
 		var mesh = new Mesh(untyped geom, mat);
 		return new ObjectView(mesh);
+	}
+
+	public static function fromAssets(name:String, clone:Bool = false)
+	{
+		var o = Assets.getObject3D(name);
+		return new ObjectView( clone ? o.clone() : o );
 	}
 
 	override public function onAdded() 

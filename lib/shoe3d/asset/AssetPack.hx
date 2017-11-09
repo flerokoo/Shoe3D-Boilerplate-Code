@@ -41,10 +41,10 @@ class AssetPack
 		_objectMap = new Map();
 	}
 	
-	public function getAtlas( name:String )
+	public function getAtlas(name:String, required:Bool = true)
 	{
-		if ( ! _atlasMap.exists( name ) ) throw 'No atlas with name=$name';
-		return _atlasMap.get( name );
+		if (! _atlasMap.exists(name) && required) throw 'No atlas with name=$name';
+		return _atlasMap.get(name);
 	}
 	
 	public function defineAtlas( name:String, texName:String, jsonName:String ):Atlas

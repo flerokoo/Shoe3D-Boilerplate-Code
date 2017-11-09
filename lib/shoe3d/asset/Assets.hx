@@ -1,4 +1,5 @@
 package shoe3d.asset;
+import js.three.Object3D;
 import shoe3d.util.Assert;
 import shoe3d.asset.AssetPack.TexDef;
 import shoe3d.util.Log;
@@ -57,7 +58,7 @@ class Assets
 		return true;		
 	}
 
-	public static function loadPack( folder:String, ?onSuccess:AssetPack->Void, ?onProgress:Float->Void ):Promise<AssetPack>
+	static function loadPack( folder:String, ?onSuccess:AssetPack->Void, ?onProgress:Float->Void ):Promise<AssetPack>
 	{
 		var ldr = new AssetPackLoader();
 		
@@ -73,6 +74,16 @@ class Assets
 
 	public static function addToQueue(packName:String, prioritize:Bool = false):LoadingTaskHandle 
 	{
+		if ( _loading != null && _loading.pack.toLowerCase() == packName.toLowerCase() ) {
+			return _loading.handle;
+		}
+			
+		if(_queue != null ) {
+			for (i in _queue) {
+				if (i.pack.toLowerCase() == packName.toLowerCase()) return i.handle;
+			}
+		}
+			
 		var handle = {
 			onProgress: new SingleSignal(),
 			onComplete: new SingleSignal()
@@ -95,9 +106,18 @@ class Assets
 		return handle;
 	}
 
-	public static function prioritize() 
+	public static function prioritize(packName:String) 
 	{
-
+		// TODO Implement
+		for (i in 0..._queue.length) {
+			if (_queue[i].pack.toLowerCase() == packName.toLowerCase()) break;
+		}
+		
+		var t = _queue[i];
+		_queue.splice(i, 1);
+		_queue.unshift(t);
+		
+		return Assets;
 	}
 
 	public static function callWhenPacksReady(packNames:Array<String>, callback:Void->Void, shouldAddToQueue:Bool = false, prioritize:Bool = false)
@@ -115,6 +135,7 @@ class Assets
 				for(i in packNames) addToQueue(i, prioritize);
 			}
 		}
+		return Assets;
 
 	}
 
@@ -178,6 +199,44 @@ class Assets
 		}
 		
 		throw 'No file $name found';
+		return null;	
+	}
+
+	public static function getAtlas(name:String, ?fromPack:String):Atlas
+	{
+		if ( _packMap == null ) throw 'No asset packs';
+
+		if(fromPack != null) {
+			Assert.that( getPack(fromPack) != null );
+			return getPack(fromPack).getAtlas(name);
+		}
+
+		for ( i in _packMap )
+		{
+			var ret = i.getAtlas( name, false );
+			if ( ret != null) return ret;
+		}
+		
+		throw 'No atlas $name found';
+		return null;	
+	}
+
+	public static function getObject3D(name:String, ?fromPack:String):Object3D
+	{
+		if ( _packMap == null ) throw 'No asset packs';
+
+		if(fromPack != null) {
+			Assert.that( getPack(fromPack) != null );
+			return getPack(fromPack).getObject3D(name);
+		}
+
+		for ( i in _packMap )
+		{
+			var ret = i.getObject3D( name, false );
+			if ( ret != null) return ret;
+		}
+		
+		throw 'No getObject3D $name found';
 		return null;	
 	}
 

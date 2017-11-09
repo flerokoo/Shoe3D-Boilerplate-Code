@@ -16,8 +16,7 @@ import com.component.*;
 class MainMenu extends GameScreen 
 {
     public function new () {
-        super();      
- 
+        super();       
     }
 
     override public function onCreate() {
@@ -44,16 +43,14 @@ class MainMenu extends GameScreen
         cam.position.set(10,10,10);
         cam.lookAt(new Vector3());
 
-        //haxe.Timer.delay( function(){
-            var ob = Assets.getPack('pack').getObject3D("scenery");
-            layer.addChild(new GameObject()
-                .add(new ObjectView(ob))
-            );
-        //}, 2000 );
+        layer.addChild(new GameObject()
+             .add(ObjectView.fromAssets('scenery'))
+        );
+   
 
         var layer2d = newLayer2D("2d-layer", true);
         
-        layer2d.addChild( new GameObject()
+        layer2d.addChild(new GameObject()
             .add(ImageSprite.fromAssets("branch"))     
             .add(new AutoPosition(true, true).setPos(0.5,0.5))       
         );

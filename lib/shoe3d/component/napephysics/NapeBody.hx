@@ -12,6 +12,10 @@ class NapeBody extends Component
 {
 	public var space:NapeSpace;
 	public var body:Body;
+
+	var _firstComponentIndex = 0;
+	var _secondComponentIndex = 2;
+	var _rotationComponentIndex = 1;
 	
 	public function new(space:NapeSpace, bodyType:BodyType = null ) 
 	{
@@ -51,13 +55,25 @@ class NapeBody extends Component
 	override public function onUpdate() 
 	{
 		super.onUpdate();
-		owner.transform.position.set( body.position.x, 0, body.position.y );
-		owner.transform.rotation.set( 0, -body.rotation, 0);
+		owner.transform.position.setComponent( _firstComponentIndex, body.position.x );
+		owner.transform.position.setComponent( _secondComponentIndex, body.position.y );		
+		owner.transform.rotation.setComponent( _rotationComponentIndex, body.rotation );
 	}
 	
 	override public function onRemoved() 
 	{
 		space.space.bodies.remove( body );
+	}
+
+	public function setCoordinatesMapping( x:Int, y:Int ) {
+		_firstComponentIndex = x;
+		_secondComponentIndex = y;
+		return this;
+	}
+
+	public function setRotationMapping(i:Int) {
+		_rotationComponentIndex = i;
+		return this;
 	}
 	
 	override public function dispose() 
