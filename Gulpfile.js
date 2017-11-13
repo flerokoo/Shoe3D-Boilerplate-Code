@@ -21,6 +21,8 @@ var settings = {
     ]
 }
 
+var hxml = require("./scripts/parseHXML")
+
 var debug = args.release === undefined || !args.release;
 
 gulp.task( "compile", "Compile haxe code into js", function( callback ) {
@@ -34,6 +36,16 @@ gulp.task( "copy-assets", "Copy all assets to build folder", function() {
     return gulp.src("assets/**/*")
         .pipe(changed("build/assets/"))
         .pipe(gulp.dest( "build/assets/"))
+})
+
+gulp.task( "generate-webp", "Converts all textures to webp format", function(callback) {
+	var quality = hxml.flags["shoe3d_generate_webp"];
+    if (quality && parseInt(quality) != null) {
+        require("./scripts/generateWEBP").generate(quality, callback)
+    } else {
+        console.log("Flag shoe3d_generate_webp is not enabled. Skipping this task...")
+        callback()
+    }
 })
 
 gulp.task( "copy-bootstrap", "Copy static files to build folder",  function() {
@@ -63,14 +75,17 @@ gulp.task( "serve", "Start development server", function(){
     browserSync.watch( "./build/js/bundle.js" ).on('change', browserSync.reload )
 })
 
-gulp.task( "build", "Compile, copy and bundle", sequence( ["compile", "copy-assets", "copy-bootstrap"], "bundle" ), {
+gulp.task( "build", "Compile, copy and bundle", sequence( ["compile", "copy-assets", "copy-bootstrap"], ["bundle", "generate-webp"] ), {
     options: { 
         "release" : "Also minify final bundle and remove already bundled js files" 
     }
-});
+})
 
 gulp.task( "clean", "Cleans build folder", function() {
     del("build");
 })
 
 gulp.task( "default", false, ["help"])
+
+
+

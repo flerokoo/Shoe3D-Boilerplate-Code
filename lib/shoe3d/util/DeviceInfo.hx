@@ -1,10 +1,6 @@
 package shoe3d.util;
 
-/**
- * ...
- * @author as
- */
-class Info
+class DeviceInfo
 {
 
 	public static function isMobileBrowser():Bool

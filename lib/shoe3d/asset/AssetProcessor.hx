@@ -14,6 +14,7 @@ class AssetProcessor
 {
 
 	static var _remove:Array<String>;
+	static var _webpSources = ["png", "jpg", "jpeg"];
 
 	public static function build( localBase:String = "assets"):Array<Field> 
 	{
@@ -89,13 +90,26 @@ class AssetProcessor
 
 				var result = getFormat( pathToCurrentAssetFromCWD );
 
-				out.push( {
+				out.push({
 					path: pathToCurrentAssetFromCWD,
 					name: Path.join(extra.concat([pathToCurrentFolderFromPack, name])),
 					bytes: FileSystem.stat(pathToCurrentAssetFromCWD).size,
 					format: result != null ? result.format : null,
 					extra: result != null ? result.extra : null
 				});
+
+
+				#if shoe3d_generate_webp
+				if (_webpSources.indexOf(Path.extension(pathToCurrentAssetFromCWD)) > -1) {					
+					out.push({
+						path: Path.withoutExtension(pathToCurrentAssetFromCWD) + ".webp",
+						name: Path.join(extra.concat([pathToCurrentFolderFromPack, name])),
+						bytes: FileSystem.stat(pathToCurrentAssetFromCWD).size,
+						format: WEBP,
+						extra: result != null ? result.extra : null
+					});
+				} 
+				#end
 			}
 		}
 	}

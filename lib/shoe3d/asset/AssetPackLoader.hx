@@ -55,7 +55,7 @@ class AssetPackLoader
 
 		// TODO Придумать какой-то другой способ отличать геометрию от сцены и от просто json
 		if ( ext != null &&( ext.toLowerCase() == 'geom' || ext.toLowerCase() == 'scene' ) ) name = Tools.getFileNameWithoutExtension( name );
-		_entries.push( new AssetEntry( name, url, format, bytes, params ) );
+		_entries.push( new AssetEntry( name, url, format, bytes, params ) );		
 	}
 	
 	function getFormat( url:String ):AssetFormat
@@ -65,6 +65,7 @@ class AssetPackLoader
             switch (extension.toLowerCase()) {
                 case "jpg", "jpeg": return JPG;
                 case "png": return PNG;
+				case "webp": return WEBP;
 
                 case "m4a": return M4A;
                 case "mp3": return MP3;
@@ -294,6 +295,7 @@ class AssetPackLoader
 	
 	function onLoadTexture( tex:Texture, e:AssetEntry ) 
 	{		
+		trace(e.name, e.url, e.format);
 		_pack._texMap.set( e.name, 
 		{
 			texture: tex, 

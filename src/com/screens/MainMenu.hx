@@ -1,6 +1,12 @@
 package com.screens;
 
 //import nape.phys.Body;
+import js.Three;
+import js.three.DirectionalLight;
+import js.three.DirectionalLightHelper;
+import js.three.DirectionalLightShadow;
+import js.three.OrthographicCamera;
+import shoe3d.System;
 import shoe3d.asset.Assets;
 import shoe3d.component.*;
 import shoe3d.component.light.*;
@@ -43,17 +49,47 @@ class MainMenu extends GameScreen
         cam.position.set(10,10,10);
         cam.lookAt(new Vector3());
 
+		
+		var scene = Assets.getObject3D("scenery");
+		
+		scene.traverse(function(o){
+			trace(o.type);
+			if (o.type == "DirectionalLight") {
+				var l:DirectionalLight = cast o;
+				//dwl.shadow = new DirectionalLightShadow();
+				l.shadow.mapSize.set( 512, 512 );
+				l.castShadow = true;
+				var cam:OrthographicCamera = cast l.shadow.camera;
+				
+				cam.left = -30;
+				cam.right = 30;
+				cam.bottom = -30;
+				cam.top = 30;
+				
+				cam.updateProjectionMatrix();
+				
+				var h = new DirectionalLightHelper(l, 5);
+				scene.add(h);
+				System.renderer.renderer.shadowMap.enabled = true;
+				System.renderer.renderer.shadowMap.type = Three.BasicShadowMap;
+			} else if ( o.type == "Mesh" ) {
+				untyped o.material.castShadow = true;
+				untyped o.material.receiveShadow = true;
+			}
+		});
+		
         layer.addChild(new GameObject()
-             .add(ObjectView.fromAssets('scenery'))
+             .add(new ObjectView(scene))
         );
    
 
         var layer2d = newLayer2D("2d-layer", true);
         
         layer2d.addChild(new GameObject()
-            .add(ImageSprite.fromAssets("branch"))     
+            .add(ImageSprite.fromAssets("cards"))     
             .add(new AutoPosition(true, true).setPos(0.5,0.5))       
         );
+		
 
 
         // TO REMOVE
@@ -111,5 +147,7 @@ class MainMenu extends GameScreen
             .add( new shoe3d.component.napephysics.NapeDebug( space ) )
             );
         */
+			
+		
     }
 }

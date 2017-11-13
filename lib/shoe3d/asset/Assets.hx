@@ -108,13 +108,16 @@ class Assets
 
 	public static function prioritize(packName:String) 
 	{
-		// TODO Implement
+		var index = 0;
 		for (i in 0..._queue.length) {
-			if (_queue[i].pack.toLowerCase() == packName.toLowerCase()) break;
+			if (_queue[i].pack.toLowerCase() == packName.toLowerCase()) {
+				index = i;
+				break;
+			}
 		}
 		
-		var t = _queue[i];
-		_queue.splice(i, 1);
+		var t = _queue[index];
+		_queue.splice(index, 1);
 		_queue.unshift(t);
 		
 		return Assets;

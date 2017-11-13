@@ -2,7 +2,7 @@ package shoe3d.core;
 import shoe3d.screen.ScreenManager;
 import js.html.DivElement;
 import shoe3d.util.HtmlUtils;
-import shoe3d.util.Info;
+import shoe3d.util.DeviceInfo;
 import shoe3d.util.Log;
 import shoe3d.util.signal.ZeroSignal;
 import js.Browser;
@@ -136,7 +136,7 @@ class WindowManager
 		
 		var canvas:CanvasElement = RenderManager.renderer.domElement;
 		var div:DivElement = RenderManager.container;
-		var isMobile = Info.isMobileBrowser();
+		var isMobile = DeviceInfo.isMobileBrowser();
 		
 		if ( mode == Fill || isMobile ) 
 		{
@@ -212,7 +212,7 @@ class WindowManager
 			case Fill:
 				return Browser.window.innerWidth;
 			case Default:
-				return (Info.isMobileBrowser() ? Browser.window.innerWidth : ScreenManager.width);
+				return (DeviceInfo.isMobileBrowser() ? Browser.window.innerWidth : ScreenManager.width);
 		}
 	}
 	
@@ -222,7 +222,7 @@ class WindowManager
 			case Fill:
 				return Browser.window.innerHeight;
 			case Default:
-				return (Info.isMobileBrowser() ? Browser.window.innerHeight : ScreenManager.height);
+				return (DeviceInfo.isMobileBrowser() ? Browser.window.innerHeight : ScreenManager.height);
 		}
 	}
 	
