@@ -29,8 +29,8 @@
 
 ## Extra Flags
 
-# This will flatten you out coming JavaScript code to speed up the perforamce. 
-# But you will loose the the namespacing.
+# This will flatten JavaScript code to speed up perforamce. 
+# But you will lose namespacing.
 # -D js-flatten
 
 # If set: Assetnames will contain pack name
@@ -38,6 +38,7 @@
 # -D shoe3d_include_pack_name
 
 # Allow getting textures that come with scenes/objects with Assets.getTexture(...)
+# Warning: currently causes double loading of the same texture
 # -D shoe3d_allow_textures
 
 # Iterate over screen hierarchy calling lateUpdate(). 

@@ -36,6 +36,8 @@ function generateRecursive(curpath, quality) {
 						function (status) {
 							if (status == 101) console.error("Couln't convert to webp: " + filePath)
 						})
+				case '.json':
+						// replace png/jpg links to webp alternatives (cant just replace -- need to load jpg/png if webp is not supported)
 					
 			}
 		}
