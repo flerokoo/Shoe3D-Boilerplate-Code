@@ -262,7 +262,9 @@ class AssetPackLoader
 
 	function onLoadObject(object:Object3D, e:AssetEntry) 
 	{
-		_pack._objectMap.set(e.name, object);
+		// disabled because of threejs wrong event order
+		// https://github.com/mrdoob/three.js/issues/12601		
+		//_pack._objectMap.set(e.name, object);
 	}
 
 	function onLoadObjectFromJson(data:String, e:AssetEntry)
@@ -270,14 +272,28 @@ class AssetPackLoader
 		// this callback will fire BEFORE images are loaded
 		// but, object still will be available in assetPack (as opposed to ObjectLoader)
 		var object = null;
+		var parsed = null;
 		try {
-			var l = new ObjectLoader();
-			l.setTexturePath( haxe.io.Path.directory(e.url) + "/" );
-			object = l.parse( haxe.Json.parse(data) );
+			parsed = haxe.Json.parse(data);	
 		} catch (t:String) {
 			Log.warn( 'Couldnt parse object ${e.name}: $t' );
 		}
- 		
+		var loader = new ObjectLoader( _manager );
+		loader.setTexturePath( haxe.io.Path.directory(e.url) + "/" );		
+		#if shoe3d_generate_webp		
+		if (_supportedFormats.indexOf(WEBP) > -1) {
+			// assume that webp version of all images exist
+			// otherwise something during the build went wrong
+			if (parsed.images != null && parsed.images.length > 0) {
+				var temp:Array<Dynamic> = untyped parsed.images;
+				for (i in temp) {
+					i.url = haxe.io.Path.withoutExtension(i.url) + '.webp';
+				}
+			}
+			trace(parsed.images);
+		}
+		#end		
+		object = loader.parse( parsed ); 		
 		_pack._objectMap.set(e.name, object);
 	}
 		

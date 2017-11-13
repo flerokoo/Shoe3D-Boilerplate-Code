@@ -1,6 +1,7 @@
 # Shoe3D Boilerplate
 
-Framework i use to make WebGL games. Utilizes three.js for rendering and SPE.js for GPU-powered particles.
+Framework I use to develop WebGL games with Haxe. 
+Utilizes three.js for rendering, SPE.js for GPU-powered particles, SoundJS for playback and Gulp for various tasks.
 
 
 ## Features
@@ -11,8 +12,28 @@ Framework i use to make WebGL games. Utilizes three.js for rendering and SPE.js 
 * Support for 2D/UI rendering (unlike three.js)
 * Easy work with keyboard/mouse/touch input
 * Automatic assets management
-    * Framework is smart enough to load blender-exported Three.js objects/geometries as objects/geometries (not just a raw json file)
-    * Support for multiple resource types of the same asset: framework loads texture.webp only if supported by browser, texture.png otherwise. Same with sound formats
+    * Framework is smart enough to load blender-exported Three.js objects/geometries as objects/geometries
+    * Support for multiple resource types of the same asset: for instance, framework loads texture.webp only if supported by browser, texture.png otherwise. Same with sound formats
+
+## How to use
+
+1) Clone this repo: `https://github.com/flerokoo/Shoe3D-Boilerplate-Code.git` 
+2) Build the game: `gulp build [--release]`
+3) Test the game: `gulp serve`
+
+Check build.hxml for framework/compiler configuration.
+Use `gulp help` to know what more you can do.
+
+## Project structure
+
+Folders you could be interested in:
+`assets/` — All assets should go here. Direct children of this folder are considered as assetpacks
+`build/` — Folder with last build of the game
+`scripts/` — Various useful scripts that could help in development process
+`web/` — Static resources go here
+`src/` — Your code
+`build.hxml` — Build configuration for Haxe compiler. Edit this to add libraries/classpaths/additional flags. Framework configuration is performed from here too.
+
 
 ## API
 
@@ -38,6 +59,6 @@ Special thanks to the creator of Flambe, Bruno Garcia.
 - [ ] Implement index.html tags autoreplace (i.e. <%%shoe3d_game_name%%> to what defined in build.hxml)
 - [ ] Fix double loading of the same texture, when shoe3d_allow_textures (maybe get it from three.js internal cache?)
 - [ ] Add batching for 2D layers
-- [ ] Add webp encoding for jpeg/png
+- [ ] Add webp encoding for jpeg/png (for size reduction)
     - [x] Encoding itself
-    - [ ] Replace png/jpg image urls in threejs object json files (can't just replace -- what if webp is not supported in browser?)
+    - [x] Replace png/jpg image urls in threejs object json files (now replacing links before loading (in runtime) only if webp is supported -- assuming that webp version exists when shoe3d_generate_webp flag is enabled)

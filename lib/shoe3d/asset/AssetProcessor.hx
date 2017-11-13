@@ -13,8 +13,9 @@ private typedef FormatCheckResult = { format:AssetFormat, ?extra:Dynamic }
 class AssetProcessor
 {
 
+	// assets with urls listed in this array will be removed from final asset list (used in runtime)
 	static var _remove:Array<String>;
-	static var _webpSources = ["png", "jpg", "jpeg"];
+	static var _webpSourceFormats = ["png", "jpg", "jpeg"];
 
 	public static function build( localBase:String = "assets"):Array<Field> 
 	{
@@ -57,19 +58,8 @@ class AssetProcessor
 			kind: FVar( macro : Array<Dynamic>, macro $v{prepared} ),
 			pos: Context.currentPos()
 		};
-		
-		
-		/*switch( Context.getType("shoe3d.asset.AssetPackLoader")) {
-			case TInst( cl, _ ):				
-				var data = { packs: prepared };
-				var cl = cl.get();
-				var meta = cl.meta;
-				meta.remove("assets");
-				meta.add("assets", [ macro $v { data } ], cl.pos );
-			default:
-				throw 'WAT';
-		}
-		*/
+			
+
 		
 		fields.push( field );
 		return fields;
@@ -100,7 +90,8 @@ class AssetProcessor
 
 
 				#if shoe3d_generate_webp
-				if (_webpSources.indexOf(Path.extension(pathToCurrentAssetFromCWD)) > -1) {					
+				// assume that webp-version is generated for every asset which extension is contained in _webpSourceFormats
+				if (_webpSourceFormats.indexOf(Path.extension(pathToCurrentAssetFromCWD)) > -1) {					
 					out.push({
 						path: Path.withoutExtension(pathToCurrentAssetFromCWD) + ".webp",
 						name: Path.join(extra.concat([pathToCurrentFolderFromPack, name])),
@@ -152,16 +143,24 @@ class AssetProcessor
 
 	static function isThreeJsEntity(parsed:Dynamic, path:String) : FormatCheckResult {
 		var type:String = getDynamicValue(parsed, ["metadata", "type"]);				
-		if( type != null ) {
-			switch(type.toLowerCase()){
+		if (type != null) {
+			switch (type.toLowerCase()){
 				case "object":
 					#if !shoe3d_allow_textures
 					var images:Array<Dynamic> = getDynamicValue(parsed, ["images"]);
-					for( i in images ) {
+					if (images != null && images.length > 0) {
 						var dir = Path.directory(path);
-						var name = i.name;
-						_remove.push(Path.join([dir, name]));
-					}						
+						for (i in images) {							
+							var name = i.name;
+							var imagePath = Path.join([dir, name]);
+							_remove.push(imagePath);						
+							#if shoe3d_generate_webp	
+							// should prevent loading of webp version of this image too
+							// it is gonna be loaded when whole object is loaded					
+							_remove.push(Path.withoutExtension(imagePath) + '.webp');
+							#end
+						}		
+					}				
 					#end
 					return { format: OBJECT };
 				case 'geometry':
