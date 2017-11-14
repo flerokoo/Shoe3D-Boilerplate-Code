@@ -7,5 +7,5 @@ var template = fs.readFileSync(path.join(__dirname, "files", "template.hxproj"))
 fs.writeFileSync(path.join(       
         __dirname,
         "..",
-        "Project-" + (haxe.flags.shoe3d_game_name == null ? "" : haxe.flags.shoe3d_game_name) + ".hxproj")
+        "Project.hxproj")
     , template);

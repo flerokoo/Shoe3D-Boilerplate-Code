@@ -20,6 +20,10 @@ class MainLoop
 	 */
 	private var _preframe:ZeroSignal;
 	/**
+	 *  Called after frame is skipped
+	 */
+	private var _onFrameSkip:ZeroSignal;
+	/**
 	 * Called on frame exit (Everything is updated)
 	 */
 	private var _frame:SingleSignal<Float>;
@@ -42,9 +46,14 @@ class MainLoop
 	{
 		_frame = new SingleSignal();
 		_preframe = new ZeroSignal();
-		
+		_onFrameSkip = new ZeroSignal();		
+	}
+	
+	public function start() 
+	{
 		if ( untyped __js__("!window.requestAnimationFrame") ) 
-		{			
+		{		
+			// check if requestAnimationFrame exists. Replace it with vendor-prefixed function/fallback otherwise	
 			untyped __js__("window.requestAnimationFrame = (function(){window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || oRequestAnimationFrame || msRequestAnimationFrame" +
 			"function(callback, el){window.setTimeout(callback, 1000/60);}; })() " );
 		} 
@@ -53,12 +62,7 @@ class MainLoop
 			// skip first frame after show up
 			if ( ! hidden ) skipFrame();
 		} );
-		
 
-	}
-	
-	public function start() 
-	{
 		var updateFrame = null;
 		updateFrame = function(t) {
 			update();
@@ -76,7 +80,8 @@ class MainLoop
 		var middleTime;
 		if ( System.window.hidden._ || paused ) return;
 		if ( _skipFrame ) {
-			_skipFrame = false;			
+			_skipFrame = false;		
+			_onFrameSkip.emit();	
 			return;
 		}
 		
@@ -105,14 +110,22 @@ class MainLoop
 			render();	
 			
 			#if shoe3d_enable_late_update
-			for ( layer in ScreenManager._currentScreen.layers )
+			for ( layer in ScreenManager._currentScreen.layers ) {
 				for ( i in layer.gameObjects )
 				{
 					lateUpdateGameObject( i );
 				}
+			}
+
+			_currenScreen.onLateUpdate();
 			#end
 			
 		}
+
+		#if (actuate && actuate_manual_update)
+		motion.actuators.SimpleActuator.stage_onEnterFrame();
+		#end
+
 		renderTime = Time.now() - middleTime;
 		frameTime = Time.now() - startTime;
 		_totalUpdateTime += frameTime;		
@@ -133,7 +146,6 @@ class MainLoop
 	function skipFrame()
 	{
 		_skipFrame = true;
-		Time._lastUpdateTime = Time.now();
 	}
 	
 	function getTimingString():String

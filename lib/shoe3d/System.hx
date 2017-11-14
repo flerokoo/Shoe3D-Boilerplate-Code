@@ -74,7 +74,7 @@ class System
 			
 			#if (flash || nme || openfl)
 			Lib.current.stage.addEventListener (Event.ENTER_FRAME, stage_onEnterFrame);
-			#elseif sh3d
+			#elseif shoe3d
 			shoe3d.System._loop._frame.connect( stage_onEnterFrame );
 			#else
 			timer = new Timer (Std.int(1000 / 60));
@@ -88,7 +88,8 @@ class System
 	public static function init( originalWidth:Int = 640, originalHeight:Int = 800) 
 	{
 		HtmlUtils.fixAndroidMath();
-		//_baseScene = new Scene();
+		_loop = new MainLoop();
+
 		var ready = true;
 		ready = ready && GameConsole.init();
 		ready = ready && WindowManager.init();
@@ -104,20 +105,24 @@ class System
 		ScreenManager.recalcScale();
 		
 		//WindowManager.setSize( originalWidth, originalHeight );
-		window.updateLayout();		
+		window.updateLayout();	
 		
-		_loop = new MainLoop();
+		
 		_loop._frame.connect( clearInfoBox );
 		if( ready ) _loop.start();
 		
-		#if Actuate
-		WindowManager.hidden.change.connect( function( cur, prev ) {
-			if ( cur == true ) 
+		#if (actuate && actuate_manual_time)
+		motion.actuators.SimpleActuator.getTime = function() {			
+			return Time.timeSinceGameStart;
+		}
+		#end
+		/*WindowManager.hidden.change.connect( function( cur, prev ) {
+			if (cur) 
 				motion.Actuate.pauseAll()
 			else
 				motion.Actuate.resumeAll();
-		});
-		#end
+		});*/
+		
 	}
 	
 	static private function clearInfoBox( ?dt:Float ) 
@@ -140,6 +145,7 @@ class System
 	
 	public static function pause() 
 	{
+		_loop.skipFrame();
 		_loop.paused = true;
 	}
 	

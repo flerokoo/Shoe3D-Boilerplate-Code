@@ -21,7 +21,7 @@
 # Game height
 -D shoe3d_game_height=800
 # Game name
--D shoe3d_game_name="Game#1"
+-D shoe3d_game_name="My New Game"
 # Game version
 -D shoe3d_game_version="1.0.0"
 
@@ -50,5 +50,10 @@
 # -D shoe3d_allow_urls="someurl.ru;someotherurl.com"
 
 # Generate .webp alternative for every .jpg/.png texture in assets folder. It will be loaded instead of source if supported by browser
-# The parameted is quality of generated webp image.
+# The number is quality of generated webp image (from 0 to 100)
 -D shoe3d_generate_webp=80
+
+# Use this flags to update actuate from main loop of Shoe3D
+# Highly recommended (in case you use actuate, ofc)
+-D actuate_manual_update
+-D actuate_manual_time

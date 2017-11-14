@@ -13,6 +13,7 @@ Utilizes three.js for rendering, SPE.js for GPU-powered particles, SoundJS for p
 * Easy work with keyboard/mouse/touch input
 * Automatic assets management
     * Framework is smart enough to load blender-exported Three.js objects/geometries as objects/geometries
+    * Same thing with atlases (from ShoeBox) — they are detected at compile-time and loaded as atlases automatically 
     * Support for multiple resource types of the same asset: for instance, framework loads texture.webp only if supported by browser, texture.png otherwise. Same with sound formats
 
 ## How to use
@@ -23,6 +24,8 @@ Utilizes three.js for rendering, SPE.js for GPU-powered particles, SoundJS for p
 
 Check build.hxml for framework/compiler configuration.
 Use `gulp help` to know what more you can do.
+
+You can create _FlashDevelop_ project by running `node ./scripts/createFDProject`
 
 ## Project structure
 

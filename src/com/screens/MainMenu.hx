@@ -85,10 +85,12 @@ class MainMenu extends GameScreen
 
         var layer2d = newLayer2D("2d-layer", true);
         
-        layer2d.addChild(new GameObject()
-            .add(ImageSprite.fromAssets("cards"))     
-            .add(new AutoPosition(true, true).setPos(0.5,0.5))       
+        var t = null;
+        layer2d.addChild(t = new GameObject()
+            .add(ImageSprite.fromAssets("jake"))     
+            //.add(new AutoPosition(true, true).setPos(0.5,0.5))       
         );
+        motion.Actuate.tween(t.transform.position, 10, {y:500});
 		
 
 
