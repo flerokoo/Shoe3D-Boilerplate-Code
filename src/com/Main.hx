@@ -4,6 +4,8 @@ import shoe3d.util.Log;
 import shoe3d.*;
 import shoe3d.asset.*;
 import shoe3d.screen.BasicPreloader;
+import shoe3d.component.*;
+
 class Main
 {
 

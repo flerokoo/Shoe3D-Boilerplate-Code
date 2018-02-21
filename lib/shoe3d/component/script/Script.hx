@@ -10,41 +10,42 @@ import shoe3d.util.signal.ZeroSignal;
  */
 class Script extends Component
 {
-	public var onComplete(default,null):ZeroSignal;
-	
-	var _action:Action;
-	var _running:Bool = false;
-	
-	public function new( action:Action, startOnAdded:Bool = false ) 
-	{
-		super();
-		_action = action;
-		_running = startOnAdded;
-		onComplete = new ZeroSignal();
-	}
-	
-	override public function onAdded() 
-	{
-		if ( _running ) run();
-	}
-	
-	
-	override public function onUpdate() 
-	{
-		if ( _running ) {
-			var flag = _action.update( Time.dt );
-			
-			if ( flag ) {			
-				_running = false;
-				onComplete.emit();
-			}
-		}
-	}
-	
-	public function run()
-	{
-		_action.start();
-		_running = true;
-		return this;
-	}
+    public var onComplete(default,null):ZeroSignal;
+
+    var _action:Action;
+    var _running:Bool = false;
+
+    public function new( action:Action, startOnAdded:Bool = false )
+    {
+        super();
+        _action = action;
+        _running = startOnAdded;
+        onComplete = new ZeroSignal();
+    }
+
+    override public function onAdded()
+    {
+        if ( _running ) run();
+    }
+
+    override public function onUpdate()
+    {
+        if ( _running )
+        {
+            var flag = _action.update( Time.dt );
+
+            if ( flag )
+            {
+                _running = false;
+                onComplete.emit();
+            }
+        }
+    }
+
+    public function run()
+    {
+        _action.start();
+        _running = true;
+        return this;
+    }
 }

@@ -4,7 +4,7 @@ package shoe3d.core.input;
  * ...
  * @author as
  */
-@:allow(shoe3d) 
+@:allow(shoe3d)
 class TouchPoint
 {
 
@@ -15,7 +15,7 @@ class TouchPoint
     function new (id :Int)
     {
         this.id = id;
-        _source = Touch(this);		
+        _source = Touch(this);
     }
 
     function set (viewX :Float, viewY :Float)
@@ -25,5 +25,5 @@ class TouchPoint
     }
 
     var _source :EventSource;
-	
+
 }

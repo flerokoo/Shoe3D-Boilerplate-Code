@@ -8,24 +8,24 @@ import js.three.AmbientLight;
  */
 class LightAmbient extends Component
 {
-	var light:AmbientLight;
-	
-	public function new( ?hex:Int ) 
-	{
-		super();
-		light = new AmbientLight( hex );
-	}
-	
-	override public function onAdded() 
-	{
-		super.onAdded();
-		owner.transform.add( light );
-	}
-	
-	override public function onRemoved() 
-	{
-		super.onRemoved();
-		owner.transform.remove( light );
-	}
-	
+    var light:AmbientLight;
+
+    public function new( ?hex:Int )
+    {
+        super();
+        light = new AmbientLight( hex );
+    }
+
+    override public function onAdded()
+    {
+        super.onAdded();
+        owner.transform.add( light );
+    }
+
+    override public function onRemoved()
+    {
+        super.onRemoved();
+        owner.transform.remove( light );
+    }
+
 }

@@ -9,6 +9,6 @@ import js.three.Object3D;
 interface ComponentContainer
 {
 
-	public var components(default,null):Array<Component>;
-	
+    public var components(default,null):Array<Component>;
+
 }

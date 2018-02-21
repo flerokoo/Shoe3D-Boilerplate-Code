@@ -7,12 +7,14 @@ package shoe3d.util;
 class Assert
 {
 
-	public static function that( cond:Bool, ?msg:String ) {
-		if ( ! cond ) fail( msg );
-	}
-	
-	public static function fail( msg:String ) {
-		throw msg;
-	}
-	
+    public static function that( cond:Bool, ?msg:String )
+    {
+        if ( ! cond ) fail( msg );
+    }
+
+    public static function fail( msg:String )
+    {
+        throw msg;
+    }
+
 }

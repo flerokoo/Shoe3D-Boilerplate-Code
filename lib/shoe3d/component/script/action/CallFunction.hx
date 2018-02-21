@@ -8,23 +8,23 @@ import shoe3d.util.Assert;
 class CallFunction implements Action
 {
 
-	var _fn:Void->Void;
-	
-	public function new( fn:Void->Void ) 
-	{
-		Assert.that( fn != null );
-		_fn = fn;
-	}
-	
-	public function start()
-	{
-		
-	}
-	
-	public function update( dt:Float ):Bool
-	{
-		_fn();
-		return true;
-	}
-	
+    var _fn:Void->Void;
+
+    public function new( fn:Void->Void )
+    {
+        Assert.that( fn != null );
+        _fn = fn;
+    }
+
+    public function start()
+    {
+
+    }
+
+    public function update( dt:Float ):Bool
+    {
+        _fn();
+        return true;
+    }
+
 }

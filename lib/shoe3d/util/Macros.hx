@@ -1,26 +1,27 @@
 package shoe3d.util;
 import haxe.macro.Expr;
 
-/**
- * ...
- * @author as
- */
 class Macros
 {
 
     public static function buildFields (block :Expr) :Array<Field>
     {
         var fields :Array<Field> = [];
-        switch (block.expr) {
+        switch (block.expr)
+        {
             case EBlock(exprs):
                 var metas = [];
-                for (expr in exprs) {
-                    switch (expr.expr) {
+                for (expr in exprs)
+                {
+                    switch (expr.expr)
+                    {
                         case EMeta(meta, e):
                             metas.push(meta);
                         case EVars(vars):
-                            for (v in vars) {
-                                fields.push({
+                            for (v in vars)
+                            {
+                                fields.push(
+                                {
                                     name: getFieldName(v.name),
                                     doc: null,
                                     access: getAccess(v.name),
@@ -31,7 +32,8 @@ class Macros
                             }
                             metas = [];
                         case EFunction(name, f):
-                            fields.push({
+                            fields.push(
+                            {
                                 name: getFieldName(name),
                                 doc: null,
                                 access: getAccess(name),
@@ -51,8 +53,10 @@ class Macros
     private static function getAccess (name :String) :Array<Access>
     {
         var result = [];
-        for (token in name.split("__")) {
-            var access = switch (token) {
+        for (token in name.split("__"))
+        {
+            var access = switch (token)
+            {
                 case "public": APublic;
                 case "private": APrivate;
                 case "static": AStatic;
@@ -61,7 +65,8 @@ class Macros
                 case "inline": AInline;
                 default: null;
             }
-            if (access != null) {
+            if (access != null)
+            {
                 result.push(access);
             }
         }
@@ -73,5 +78,5 @@ class Macros
         var parts = name.split("__");
         return parts[parts.length-1];
     }
-	
+
 }

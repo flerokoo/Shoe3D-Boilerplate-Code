@@ -1,23 +1,25 @@
 var gulp = require("gulp")
-var exec = require("child_process").exec;
-var args = require("yargs").argv;
-var changed = require("gulp-changed");
-var concat = require("gulp-concat");
-var gulpif = require("gulp-if");
-var uglify = require("gulp-uglify");
-var sequence = require("gulp-sequence");
-var del = require("del");
-var tap = require("gulp-tap");
+var exec = require("child_process").exec
+var args = require("yargs").argv
+var changed = require("gulp-changed")
+var concat = require("gulp-concat")
+var gulpif = require("gulp-if")
+var uglify = require("gulp-uglify")
+var sequence = require("gulp-sequence")
+var del = require("del")
+var tap = require("gulp-tap")
 var browserSync = require("browser-sync").create()
-require('gulp-help')(gulp);
+require('gulp-help')(gulp)
 
 
 var settings = {
     bundleOrder: [
+        "build/js/es6-promise-polyfill.js",
         "build/js/typedarray.js", 
         "build/js/soundjs-0.6.2.min.js", 
         "build/js/three.js", 
-        "build/js/spe.min.js"
+        "build/js/spe.min.js",
+        "build/js/GLTFLoader.js"
     ]
 }
 

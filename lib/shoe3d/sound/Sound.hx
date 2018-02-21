@@ -7,9 +7,9 @@ package shoe3d.sound;
 class Sound
 {
 
-	public function new() 
-	{
-		
-	}
-	
+    public function new()
+    {
+
+    }
+
 }

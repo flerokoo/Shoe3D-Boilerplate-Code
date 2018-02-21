@@ -30,12 +30,12 @@ You can create _FlashDevelop_ project by running `node ./scripts/createFDProject
 ## Project structure
 
 Folders you could be interested in:
-`assets/` — All assets should go here. Direct children of this folder are considered as assetpacks
-`build/` — Folder with last build of the game
-`scripts/` — Various useful scripts that could help in development process
-`web/` — Static resources go here
-`src/` — Your code
-`build.hxml` — Build configuration for Haxe compiler. Edit this to add libraries/classpaths/additional flags. Framework configuration is performed from here too.
+* `assets/` — All assets should go here. Direct children of this folder are considered as assetpacks
+* `build/` — Folder with last build of the game
+* `scripts/` — Various useful scripts that could help in development process
+* `web/` — Static resources go here
+* `src/` — Your code
+* `build.hxml` — Build configuration for Haxe compiler. Edit this to add libraries/classpaths/additional flags. Framework configuration is performed from here too.
 
 
 ## API
@@ -59,9 +59,21 @@ Special thanks to the creator of Flambe, Bruno Garcia.
 
 
 ## TODO
+- [ ] Add possibility to dispose assetpacks
+- [ ] Dispose screen after hidden
+- [ ] Add support for loading msgpack-compressed objects
+- [ ] Add antialias flag
+- [ ] Fix type of parameter of Log.log (when building in release mode)
+- [ ] Add getGeometry/getBufferGeometry to both  Assets and AssetPack
+- [ ] Fix sourcemaps bundling
+- [ ] Remake layer camera settings
+- [ ] Remake EasyDebug
 - [ ] Implement index.html tags autoreplace (i.e. <%%shoe3d_game_name%%> to what defined in build.hxml)
 - [ ] Fix double loading of the same texture, when shoe3d_allow_textures (maybe get it from three.js internal cache?)
+- [ ] Refactor input event propagation code
 - [ ] Add batching for 2D layers
+- [ ] Pass dt to gameobject/component update method (and think of some system to affect dt, that will be received by children gameobjects) 
+- [ ] Support for GLTF auto loading (i kinda added it already, but it seems that there's a problem with texture loading in three's GLTFLoader.js) Also have to decide what to do if theres not only scene loaded (probably just push all meshes/scenes to object3d map of assetpack)
 - [ ] Add webp encoding for jpeg/png (for size reduction)
     - [x] Encoding itself
     - [x] Replace png/jpg image urls in threejs object json files (now replacing links before loading (in runtime) only if webp is supported -- assuming that webp version exists when shoe3d_generate_webp flag is enabled)

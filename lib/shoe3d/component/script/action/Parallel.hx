@@ -9,39 +9,39 @@ import shoe3d.util.Log;
 class Parallel implements Action
 {
 
-	public var actions:Array<Action>;
-	
-	var _doneness:Array<Bool>;
+    public var actions:Array<Action>;
 
-	
-	public function new( acts:Array<Action> ) 
-	{
-		Assert.that( acts.length > 0 );
-		actions = acts;
-		_doneness = [for (i in 0...actions.length) false];
-	}
-	
-	public function start():Void
-	{
-		for ( i in 0..._doneness.length) _doneness[i] = false;
-		for ( i in actions ) i.start();		
-	}
+    var _doneness:Array<Bool>;
 
-	
-	public function update( dt:Float ):Bool
-	{
-		var done = true;
-		
-		for ( i in 0...actions.length ) {				
-			if ( ! _doneness[i] ) {
-				var action = actions[i];
-				var actionComplete = action.update( dt );			
-				if ( actionComplete ) _doneness[i] = true;				
-				done = done && actionComplete;
-			}
-			
-		}
-		return done;
-	}
-	
+    public function new( acts:Array<Action> )
+    {
+        Assert.that( acts.length > 0 );
+        actions = acts;
+        _doneness = [for (i in 0...actions.length) false];
+    }
+
+    public function start():Void
+    {
+        for ( i in 0..._doneness.length) _doneness[i] = false;
+        for ( i in actions ) i.start();
+    }
+
+    public function update( dt:Float ):Bool
+    {
+        var done = true;
+
+        for ( i in 0...actions.length )
+        {
+            if ( ! _doneness[i] )
+            {
+                var action = actions[i];
+                var actionComplete = action.update( dt );
+                if ( actionComplete ) _doneness[i] = true;
+                done = done && actionComplete;
+            }
+
+        }
+        return done;
+    }
+
 }

@@ -7,12 +7,12 @@ package shoe3d.component.script.action;
 interface Action
 {
 
-	public function start():Void;
-	
-	/**
-	 * Return true if action comlete
-	 * @return
-	 */
-	public function update( dt:Float ):Bool;
-	
+    public function start():Void;
+
+    /**
+     * Return true if action comlete
+     * @return
+     */
+    public function update( dt:Float ):Bool;
+
 }

@@ -8,6 +8,6 @@ import shoe3d.core.game.GameObject;
 interface GameObjectContainer
 {
 
-	public var children(default,null):Array<GameObject>;
-	
+    public var children(default,null):Array<GameObject>;
+
 }

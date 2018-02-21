@@ -9,24 +9,24 @@ import js.three.DirectionalLight;
  */
 class LightDirectional extends Component
 {
-	var light:DirectionalLight;
-	
-	public function new( ?hex:Int, ?intensity:Float ) 
-	{
-		super();
-		light = new DirectionalLight( hex, intensity );
-	}
-	
-	override public function onAdded() 
-	{
-		super.onAdded();
-		owner.transform.add( light );
-	}
-	
-	override public function onRemoved() 
-	{
-		super.onRemoved();
-		owner.transform.remove( light );
-	}
-	
+    var light:DirectionalLight;
+
+    public function new( ?hex:Int, ?intensity:Float )
+    {
+        super();
+        light = new DirectionalLight( hex, intensity );
+    }
+
+    override public function onAdded()
+    {
+        super.onAdded();
+        owner.transform.add( light );
+    }
+
+    override public function onRemoved()
+    {
+        super.onRemoved();
+        owner.transform.remove( light );
+    }
+
 }

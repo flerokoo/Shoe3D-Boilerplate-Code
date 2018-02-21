@@ -118,7 +118,8 @@ class KeyCodes
 
     public static function toKey (keyCode :Int) :Key
     {
-        switch (keyCode) {
+        switch (keyCode)
+        {
             case A: return Key.A;
             case B: return Key.B;
             case C: return Key.C;
@@ -230,7 +231,8 @@ class KeyCodes
 
     public static function toKeyCode (key :Key) :Int
     {
-        switch (key) {
+        switch (key)
+        {
             case Key.A: return A;
             case Key.B: return B;
             case Key.C: return C;

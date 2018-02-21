@@ -13,10 +13,10 @@ class Pool<A>
     {
         _allocator = allocator;
         _freeObjects = [];
-		if ( preallocate > 0 )
-			for ( i in 0...preallocate )
-				put( _allocator() );
-		
+        if ( preallocate > 0 )
+            for ( i in 0...preallocate )
+                put( _allocator() );
+
     }
 
     /**
@@ -26,7 +26,8 @@ class Pool<A>
      */
     public function take () :A
     {
-        if (_freeObjects.length > 0) {
+        if (_freeObjects.length > 0)
+        {
             return _freeObjects.pop();
         }
         var object = _allocator();
@@ -41,10 +42,11 @@ class Pool<A>
     public function put (object :A)
     {
         Assert.that(object != null);
-		#if debug
-		Assert.that( _freeObjects.indexOf(object) < 0, "This object is already in the pool, you motherfucker!" );
-		#end
-        if (_freeObjects.length < _capacity) {
+        #if debug
+        Assert.that( _freeObjects.indexOf(object) < 0, "This object is already in the pool, you motherfucker!" );
+        #end
+        if (_freeObjects.length < _capacity)
+        {
             _freeObjects.push(object);
         }
     }
@@ -57,12 +59,15 @@ class Pool<A>
      */
     public function setSize (size :Int) :Pool<A>
     {
-        if (_freeObjects.length > size) {
-			//resizing on js and flash
-			(untyped _freeObjects).length = size;
-        } else {
+        if (_freeObjects.length > size)
+        {
+            //resizing on js and flash
+            (untyped _freeObjects).length = size;
+        }
+        else {
             var needed = size - _freeObjects.length;
-            for (ii in 0...needed) {
+            for (ii in 0...needed)
+            {
                 var object = _allocator();
                 Assert.that(object != null);
                 _freeObjects.push(object);
@@ -78,15 +83,14 @@ class Pool<A>
      */
     public function setCapacity (capacity :Int) :Pool<A>
     {
-        if (_freeObjects.length > capacity) {
+        if (_freeObjects.length > capacity)
+        {
             //resizing on js and flash
-			(untyped _freeObjects).length = capacity;
+            (untyped _freeObjects).length = capacity;
         }
         _capacity = capacity;
         return this;
     }
-	
-	
 
     private var _allocator :Void -> A;
     private var _freeObjects :Array<A>;
