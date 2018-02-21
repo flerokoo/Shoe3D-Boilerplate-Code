@@ -1,4 +1,5 @@
 package shoe3d.asset;
+import shoe3d.util.Disposable;
 import shoe3d.util.Assert;
 import shoe3d.util.Log;
 import shoe3d.util.UVTools;
@@ -12,12 +13,9 @@ import js.three.Texture;
 import js.three.Material;
 import js.three.MeshPhongMaterial;
 import js.three.Mesh;
-/**
- * ...
- * @author as
- */
+
 @:allow(shoe3d)
-class AssetPack
+class AssetPack implements Disposable 
 {
     private var _texMap:Map<String,TexDef>;
     private var _fileMap:Map<String,File>;
@@ -103,7 +101,7 @@ class AssetPack
         {
             if ( required )
             {
-                throw 'No sound with name=$name'
+                throw 'No sound with name=$name';
             }
             else
             {
@@ -125,6 +123,36 @@ class AssetPack
         var ret = _geomMap.get( name );
         if ( ret == null && required ) throw 'No file with name=$name';
         return ret;
+    }
+
+    public function dispose()
+    {
+        // private var _texMap:Map<String,TexDef>;
+        // private var _fileMap:Map<String,File>;
+        // private var _geomMap:Map<String,Geometry>;
+        // private var _bufGeomMap:Map<String,BufferGeometry>;
+        // private var _soundMap:Map<String,String>; // map just to check if sound belongs to this asset pack
+        // private var _atlasMap:Map<String,Atlas>;
+        // private var _fontMap:Map<String,Font>;
+        // private var _objectMap:Map<String,Object3D>;
+
+        function clearMap<String,V>(map:Map<String,V>):Void
+        {
+            for( i in map.keys() ) 
+            {
+                map.set(i, null);
+            }
+        }
+
+        clearMap(_texMap); _texMap = null;
+        clearMap(_fileMap); _fileMap = null;
+        clearMap(_geomMap); _geomMap = null;
+        clearMap(_bufGeomMap); _bufGeomMap = null;
+        clearMap(_soundMap); _soundMap = null;
+        clearMap(_atlasMap); _atlasMap = null;
+        clearMap(_fontMap); _fontMap = null;
+        clearMap(_objectMap); _objectMap = null;
+
     }
 
 }

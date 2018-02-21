@@ -75,6 +75,7 @@ class AssetPackLoader
                 case "opus": return OPUS;
                 case "wav": return WAV;
                 case "aac": return AAC;
+                case "gltf": return GLTF;
 
             }
         }
@@ -217,7 +218,7 @@ class AssetPackLoader
         if ( _supportedFormats == null )
             detectImageFormats( function ( imgFormats:Array<AssetFormat> )
         {
-            _supportedFormats = imgFormats.concat( detectAudioFormats() ).concat( [ RAW, GEOMETRY, BUFFERGEOMETRY, OBJECT, ATLAS ] );
+            _supportedFormats = imgFormats.concat( detectAudioFormats() ).concat( [ RAW, GEOMETRY, BUFFERGEOMETRY, OBJECT, ATLAS, GLTF ] );
             fn( _supportedFormats );
         } )
         else
@@ -267,6 +268,8 @@ class AssetPackLoader
                     new FileLoader( _manager ).load( e.url, function(t) onLoadObjectFromJson(t, e), null, onEntryLoadError );
                 case ATLAS:
                     new AtlasLoader( _manager ).load( e.url, e.extra.image, e.name, _pack, onEntryLoadError);
+                case GLTF:
+                    new GLTFLoader( _manager ).load(e.url, function(data) onLoadGLTF(data,e), null, onEntryLoadError);
                 default:
                     new FileLoader(_manager).load( e.url, function (data) onLoadData( data, e ), null, onEntryLoadError );
 
@@ -279,6 +282,21 @@ class AssetPackLoader
     function onEntryLoadError(e:js.html.ErrorEvent)
     {
         js.Browser.console.log("Error happened when loading: " + e);
+    }
+
+    function onLoadGLTF( gltf:Dynamic, e:AssetEntry )
+    {
+        Log.warn("GLTF Loading now only support default scene loading. See https://raw.githubusercontent.com/KhronosGroup/glTF/master/specification/2.0/figures/gltfOverview-2.0.0a.png");
+
+        if( gltf.scene != null ) 
+        {            
+            trace("ADDED TO OBJECT MAP " + e.name);
+            _pack._objectMap.set( e.name, gltf.scene );
+        } 
+        else if( gltf.scenes != null && gltf.scenes.length > 0 ) 
+        {
+            _pack._objectMap.set( e.name, gltf.scenes[0] );
+        }
     }
 
     function onLoadObject(object:Object3D, e:AssetEntry)
@@ -408,4 +426,11 @@ extern class TemporaryGeomLoader
 {
     public function new( manager:LoadingManager );
     public function load( url:String, callback:Geometry->Void, ?onProgress:Void->Void, ?onError:Dynamic->Void ):Void;
+}
+
+@:native("THREE.GLTFLoader")
+extern class GLTFLoader
+{
+    public function new( manager:LoadingManager );
+    public function load( url:String, callback:Dynamic->Void, ?onProgress:Void->Void, ?onError:Dynamic->Void ):Void;
 }

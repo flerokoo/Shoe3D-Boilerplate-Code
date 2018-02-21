@@ -7,11 +7,11 @@ package shoe3d.asset;
 class File
 {
 
-	public var content(default, null):String;
-	
-	public function new( content:String ) 
-	{
-		this.content = content;
-	}
-	
+    public var content(default, null):String;
+
+    public function new( content:String )
+    {
+        this.content = content;
+    }
+
 }
