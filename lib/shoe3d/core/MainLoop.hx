@@ -73,7 +73,7 @@ class MainLoop
 
     public function update(  )
     {
-        _preframe.emit();
+        
 
         var startTime;
         var middleTime;
@@ -84,6 +84,8 @@ class MainLoop
             _onFrameSkip.emit();
             return;
         }
+
+        _preframe.emit();
 
         System.time.update();
         middleTime = startTime = Time.now();
