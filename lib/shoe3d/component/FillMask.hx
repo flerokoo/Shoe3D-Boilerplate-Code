@@ -33,6 +33,13 @@ class FillMask extends Component
         conn = System.window.resize.connect( reoverlay );
     }
 
+    override public function dispose()
+    {
+        actionComplete = null;
+        if( conn != null ) conn.dispose();
+        super.dispose();
+    }
+
     override public function onRemoved()
     {
         super.onRemoved();

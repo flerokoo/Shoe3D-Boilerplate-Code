@@ -82,8 +82,6 @@ class GameScreen implements Disposable
 
     public function dispose()
     {
-        Log.warn("WHOOPS");
-        trace("DISPOSED SCREEN");
         for( i in layers )
             i.dispose();
     }

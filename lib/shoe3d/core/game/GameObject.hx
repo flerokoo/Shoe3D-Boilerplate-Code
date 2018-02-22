@@ -266,6 +266,15 @@ class GameObject implements ComponentContainer implements GameObjectContainer im
         return this;
     }
 
+    /*
+        public var components(default,null):Array<Component>;
+    public var children(default,null):Array<GameObject>;
+    public var name:String;
+    public var transform(default, null):Transform;
+    public var layer:Layer;
+    public var parent:GameObject;
+    private var _compMap:Map<String,Component>;*/
+
     public function dispose()
     {
         
@@ -282,6 +291,14 @@ class GameObject implements ComponentContainer implements GameObjectContainer im
             i.dispose();
 
         disposeChildren();
+
+        components = null;
+        children = null;
+        transform.userData = null;
+        transform = null;
+        layer = null;
+        parent = null;
+        _compMap = null;
     }
 
     public function disposeChildren()

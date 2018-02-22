@@ -37,6 +37,16 @@ class FillSprite extends Element2D
         this.color = color == null ? 0xffff00 : color;
     }
 
+    override public function dispose()
+    {
+        if( owner != null ) owner.transform.remove( mesh );
+        mesh = null;
+        geom = null;
+        material = null;
+        
+        super.dispose();  
+    }
+
     public override function contains( x:Float, y:Float ):Bool
     {
         //y = System.window.height - y;

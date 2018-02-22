@@ -59,6 +59,14 @@ class TextSprite extends Element2D
         _textDirty = _layoutDirty = true;
     }
 
+    override public function dispose()
+    {
+        _glyphs = null;
+        _pairs = null;
+        _lines = null;
+        super.dispose();
+    }
+
     var ir:ImmediateRenderObject;
     public function updateText()
     {

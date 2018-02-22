@@ -30,6 +30,16 @@ class ImageSprite extends Element2D
         redefineSprite();
     }
 
+    override public function dispose()
+    {
+        if( owner != null ) owner.transform.remove( _mesh );
+        _mesh = null;
+        _geometry = null;
+        _material = null;
+        
+        super.dispose();        
+    }
+
     public static function fromAssets( texDefName:String, lookInAtlases:Bool = true )
     {
         var texDef = Assets.getTexDef( texDefName, null, lookInAtlases );
