@@ -116,9 +116,13 @@ class Layer implements GameObjectContainer implements Disposable
 
     public function dispose()
     {
-        while( children.length > 0 ) 
-        {
-            children[0].dispose();
+        var ii = children.length - 1;
+        while ( ii >= 0 ) {
+            if ( ! children[ii].doNotDispose ) 
+            {
+                children[ii].dispose();
+            }
+            ii--;
         }
 
         scene = null;

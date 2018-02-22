@@ -91,7 +91,6 @@ class System
 		_loop = new MainLoop();
 
 		var ready = true;
-		ready = ready && GameConsole.init();
 		ready = ready && WindowManager.init();
 		ready = ready && RenderManager.init();
 		ready = ready && ScreenManager.init();

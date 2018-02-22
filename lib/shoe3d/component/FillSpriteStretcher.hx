@@ -1,4 +1,5 @@
 package shoe3d.component;
+import shoe3d.component.view2d.FillSprite;
 import shoe3d.core.game.Component;
 import shoe3d.util.Disposable;
 

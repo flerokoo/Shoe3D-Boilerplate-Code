@@ -12,13 +12,16 @@ import shoe3d.System;
  * ...
  * @author as
  */
+
+ typedef Cmd = {fn:Void->Void, hotkey:Key};
+ 
 @:expose("gamec")
 @:keep
 class GameConsole
 {
     public static var system:Class<System> = System;
     public static var last:Dynamic;
-    static var commands:Map<String, Void->Void>;
+    static var commands:Map<String, Cmd>;
 
     /*public var a = 1;
 
@@ -62,21 +65,20 @@ class GameConsole
 
     public static function registerCommand( name:String, fn:Dynamic, ?hotkey:Key ):Class<GameConsole>
     {
-        commands.set( name, fn );
-        if ( hotkey != null )
-        {
-            System.input.keyboard.up.connect( function( e:KeyboardEvent )
-            {
-                if ( e.key == hotkey ) fn();
-            });
-        }
+        checkInit();
+        commands.set( name, {
+            fn: fn,
+            hotkey: hotkey
+        });
+        
         return GameConsole;
     }
 
     static function exec( name:String, ?args:Array<Dynamic>):Class<GameConsole>
     {
+        checkInit();
         var c = commands.get(name);
-        if ( c != null ) Reflect.callMethod(null, c, args);
+        if ( c != null ) Reflect.callMethod(null, c.fn, args);
         else Browser.window.console.log("No command with name=" + name );
         return GameConsole;
     }
@@ -215,12 +217,31 @@ class GameConsole
 
         return GameConsole;
     }
+    
+    static function checkInit()
+    {
+        if (_inited) return;
+        init();
+        _inited = true;
+    }
 
-    static public function init()
+    static function init()
     {
         commands = new Map();
+        
+        System.input.keyboard.up.connect( function( e:KeyboardEvent )
+        {
+            for ( i in commands )
+            {
+                if ( e.key == i.hotkey ) i.fn();
+            }
+        });
+             
+        
         return true;
     }
+    
+    static var _inited = false;
 
 }
 

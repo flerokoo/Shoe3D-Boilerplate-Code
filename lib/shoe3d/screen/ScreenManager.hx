@@ -20,7 +20,7 @@ class ScreenManager
     private static var _transitions:Map<String,Transition>;
     private static var _prepared:Map<String,GameScreen>;
     private static var _screens:Map<String,Class<GameScreen>>;
-    private static var _base:GameObject;
+    //private static var _base:GameObject;
     public static var onScreenChange(default,null):SingleSignal<String>;
 
     /**
@@ -44,7 +44,7 @@ class ScreenManager
         _transitions = new Map();
         _screens = new Map();
         _prepared = new Map();
-        _base = new GameObject();
+        //_base = new GameObject();
         defaultTransition = new Transition();
         //defaultTransition.setHolder(_base);
         //System._baseScene.add( _base );
@@ -104,7 +104,7 @@ class ScreenManager
         {
             _currentScreen.onHide();
             _currentScreen.dispose();
-            if( changeFn != null ) changeFn();            
+            if ( changeFn != null ) changeFn(); 
             _currentScreen = getTargetScreen();
             _currentScreen.onShow();
             onScreenChange.emit(name);

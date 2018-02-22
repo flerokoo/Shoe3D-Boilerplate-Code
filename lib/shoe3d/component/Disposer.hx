@@ -2,6 +2,7 @@ package shoe3d.component;
 import shoe3d.core.game.Component;
 import shoe3d.core.game.GameObject;
 import shoe3d.util.Disposable;
+import shoe3d.util.Log;
 
 /**
  * ...
@@ -9,7 +10,6 @@ import shoe3d.util.Disposable;
  */
 class Disposer extends Component
 {
-
     var a:Array<Disposable>;
 
     public function new()
@@ -26,8 +26,11 @@ class Disposer extends Component
 
     override public function dispose()
     {
-        for ( d in a ) d.dispose();
-        a  = null;
+        if ( a != null ) 
+        {
+            for ( d in a ) d.dispose();
+            a  = null;
+        }
         super.dispose();
     }
 

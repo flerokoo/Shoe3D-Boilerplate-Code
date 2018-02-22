@@ -6,6 +6,7 @@ import js.three.Object3D;
 import shoe3d.core.game.Component;
 import shoe3d.util.Assert;
 import shoe3d.util.Disposable;
+import shoe3d.util.Log;
 
 typedef Transform = Object3D;
 
@@ -23,6 +24,15 @@ class GameObject implements ComponentContainer implements GameObjectContainer im
     public var transform(default, null):Transform;
     public var layer:Layer;
     public var parent:GameObject;
+    
+    /**
+     * If true, only direct call to gameobject.dispose will dispose this gameobject
+     * Other objects (parent gameobjects and layers) will not dispose it and it's hierarchy
+     * This can be useful on global (static) gameobjects, that can be used on different screens
+     * This variable prevents disposing, when changing screens
+     */
+    public var doNotDispose:Bool = false;
+    
     private var _compMap:Map<String,Component>;
 
     public static function with ( comp:Component, name:String = '')
@@ -71,8 +81,14 @@ class GameObject implements ComponentContainer implements GameObjectContainer im
         return findInContainer( this, name, depth );
     }
 
+    
+    
+    var i = 0;
+    static var ii = 0;
     public function new( name:String = '' )
     {
+        i = ii++;
+        Log.warn("CREATE " + i);
         this.name = name;
         components = [];
         children = [];
@@ -196,6 +212,7 @@ class GameObject implements ComponentContainer implements GameObjectContainer im
     private function setLayerReferenceRecursive( l:Layer )
     {
         layer = l;
+        
         for ( i in children )
             i.setLayerReferenceRecursive( l );
     }
@@ -277,7 +294,6 @@ class GameObject implements ComponentContainer implements GameObjectContainer im
 
     public function dispose()
     {
-        
         if ( parent != null )
         {
             parent.removeChild( this );
@@ -304,7 +320,10 @@ class GameObject implements ComponentContainer implements GameObjectContainer im
     public function disposeChildren()
     {
         for ( i in children )
-            i.dispose();
+        {
+            if( ! i.doNotDispose )
+                i.dispose();
+        }
     }
 
     public var numComponents(get, null):Int;	function get_numComponents() return components.length;

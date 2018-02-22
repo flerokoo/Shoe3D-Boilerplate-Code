@@ -13,7 +13,8 @@ import js.three.WireframeHelper;
 class EasyDebug
 {
 
-    public static var display(default, null) :GameObject = new GameObject('EasyDebug');
+    public static var display(get, null) :GameObject;
+
 
     public static function drawAABB( x:Float, y:Float, z:Float, w:Float = 1, h:Float = 1, d:Float = 1, color:Int = 0x72C527, wireframe:Bool = false)
     {
@@ -36,6 +37,16 @@ class EasyDebug
         while ( display.transform.children.length > 0 )
             display.transform.remove( display.transform.children[ 0 ] );
         return EasyDebug;
+    }
+    
+    static function get_display():GameObject 
+    {
+        if ( display == null ) 
+        {
+            display = new GameObject();
+            display.doNotDispose = true;
+        }
+        return display;
     }
 
 }

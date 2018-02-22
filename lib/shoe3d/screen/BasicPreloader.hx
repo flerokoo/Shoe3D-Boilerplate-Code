@@ -36,6 +36,7 @@ class BasicPreloader extends GameScreen
         layer.addChild( go );
 
         init();
+        trace("CREATED PRELOADER");
         progress.change.connect( function ( n, p)
         {
             n = Math.max(n, p);

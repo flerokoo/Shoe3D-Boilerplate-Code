@@ -1,5 +1,6 @@
 package shoe3d.component;
 import js.html.Element;
+import shoe3d.component.view2d.Element2D;
 import shoe3d.core.game.Component;
 import shoe3d.core.input.PointerEvent;
 import shoe3d.util.SMath;
@@ -48,7 +49,7 @@ class ScaleButton extends Component
     {
         if ( downSound != null  )
         {
-            SoundManager.play( downSound )
+            SoundManager.play( downSound );
         }
         else if ( defaultDownSound != null  && ! defaultSoundsDisabled)
         {
@@ -72,7 +73,7 @@ class ScaleButton extends Component
         {
             if ( upSound != null )
             {
-                SoundManager.play( upSound )
+                SoundManager.play( upSound );
             }
             else if ( defaultUpSound != null && ! defaultSoundsDisabled )
             {

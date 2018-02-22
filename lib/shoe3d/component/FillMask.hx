@@ -1,5 +1,6 @@
 package shoe3d.component;
 import motion.Actuate;
+import motion.actuators.IGenericActuator;
 import motion.easing.Linear;
 import motion.easing.Quad;
 import shoe3d.component.view2d.FillSprite;
@@ -17,7 +18,8 @@ class FillMask extends Component
     public var sprite:FillSprite;
     public var actionComplete:SingleSignal<Float>;
     public var conn:Disposable;
-
+    public var actuator:IGenericActuator;
+    
     public function new( clr:Int  = 0xffffff)
     {
         super();
@@ -36,7 +38,8 @@ class FillMask extends Component
     override public function dispose()
     {
         actionComplete = null;
-        if( conn != null ) conn.dispose();
+        if ( conn != null ) conn.dispose();
+        
         super.dispose();
     }
 
@@ -51,27 +54,27 @@ class FillMask extends Component
     public function fadeIn( duration:Float = 0.3 )
     {
         sprite.alpha._ = 0;
-        Actuate.tween( sprite.alpha, duration, { _: 1 } ).ease(Quad.easeIn).onComplete( function() actionComplete.emit( sprite.alpha._ ) );
+        Actuate.tween( sprite.alpha, duration, { _: 1 } ).ease(Quad.easeIn).onComplete( emitComplete );
         return this;
     }
 
     public function fadeOut( duration:Float = 0.3 )
     {
         sprite.alpha._ = 1;
-        Actuate.tween( sprite.alpha, duration, { _: 0 } ).ease(Quad.easeIn).onComplete( function() actionComplete.emit( sprite.alpha._ ) );
+        Actuate.tween( sprite.alpha, duration, { _: 0 } ).ease(Quad.easeIn).onComplete( emitComplete );
         return this;
     }
 
     public function fadeTo( to:Float, duration:Float = 0.3 )
     {
-        Actuate.tween( sprite.alpha, duration, { _: to } ).ease(Quad.easeIn).onComplete( function() actionComplete.emit( sprite.alpha._ ) );
+        Actuate.tween( sprite.alpha, duration, { _: to } ).ease(Quad.easeIn).onComplete( emitComplete );
         return this;
     }
 
     public function fadeFromTo( from:Float, to:Float, duration:Float = 0.3 )
     {
         sprite.alpha._ = from;
-        Actuate.tween( sprite.alpha, duration, { _: to } ).ease(Quad.easeIn).onComplete( function() actionComplete.emit( sprite.alpha._ ) );
+        Actuate.tween( sprite.alpha, duration, { _: to } ).ease(Quad.easeIn).onComplete( emitComplete );
         return this;
     }
 
@@ -98,9 +101,15 @@ class FillMask extends Component
             fn();
             Actuate.tween( sprite.alpha, outDuration, { _: 0 } )
             .ease(Quad.easeIn)
-            .onComplete( function() actionComplete.emit( sprite.alpha._ ) );
+            .onComplete( emitComplete );
         } );
 
         return this;
+    }
+    
+    function emitComplete()
+    {
+        if ( actionComplete != null )
+            actionComplete.emit( sprite.alpha._ );
     }
 }

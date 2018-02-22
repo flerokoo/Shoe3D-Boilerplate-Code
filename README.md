@@ -59,6 +59,7 @@ Special thanks to the creator of Flambe, Bruno Garcia.
 
 
 ## TODO
+- [ ] Create simple tweener, that works in context of current screen (so that all tweens are disposed, when screen is changed&disposed)
 - [ ] Add possibility to dispose assetpacks
 - [ ] Dispose screen after hidden
 - [ ] Add support for loading msgpack-compressed objects
