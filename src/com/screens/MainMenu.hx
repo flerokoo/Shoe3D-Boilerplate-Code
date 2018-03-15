@@ -169,5 +169,7 @@ class MainMenu extends GameScreen
              //}, 500 );
          }, P);
 
+        throw 'Error suka';
+
     }
 }

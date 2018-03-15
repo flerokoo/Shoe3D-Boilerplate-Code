@@ -9,10 +9,12 @@ var sequence = require("gulp-sequence")
 var del = require("del")
 var tap = require("gulp-tap")
 var browserSync = require("browser-sync").create()
+var sourcemaps = require("gulp-sourcemaps")
 require('gulp-help')(gulp)
 
 
 var settings = {
+    includeSourceMaps: true,
     bundleOrder: [
         "build/js/es6-promise-polyfill.js",
         "build/js/typedarray.js", 
@@ -59,8 +61,10 @@ gulp.task( "copy-bootstrap", "Copy static files to build folder",  function() {
 gulp.task( "bundle", "Concat all js files contained in build folder into one", function() {
     var bundleList = settings.bundleOrder.concat(["build/js/game.js"]);
     return gulp.src(bundleList)
+        .pipe(sourcemaps.init({loadMaps: settings.includeSourceMaps}))    
         .pipe(concat("bundle.js"))
         .pipe(gulpif(!debug, uglify()))
+        .pipe(gulpif(debug && settings.includeSourceMaps, sourcemaps.write()))
         .pipe(gulp.dest("build/js/"))
         .pipe(tap(function(){
                 if(!debug) {

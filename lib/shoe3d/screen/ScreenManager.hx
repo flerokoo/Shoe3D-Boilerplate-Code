@@ -105,17 +105,21 @@ class ScreenManager
             _currentScreen.onHide();
             _currentScreen.dispose();
             if ( changeFn != null ) changeFn(); 
+            
+            onScreenChange.emit(name);
+
             _currentScreen = getTargetScreen();
             _currentScreen.onShow();
-            onScreenChange.emit(name);
+            
         }
         else
         {
             //_base.add( _targetScreen.scene );
-            _currentScreen = getTargetScreen();
             if ( changeFn != null ) changeFn();
-            _currentScreen.onShow();
             onScreenChange.emit(name);
+            _currentScreen = getTargetScreen();
+            _currentScreen.onShow();
+            
         }
 
     }

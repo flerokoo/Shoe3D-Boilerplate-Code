@@ -104,7 +104,7 @@ class Layer implements GameObjectContainer implements Disposable
     public function render( renderer:WebGLRenderer)
     {
         if ( camera == null ) return;
-        renderer.sortObjects = false;
+        renderer.sortObjects = true;
         if ( clearDepthBeforeRender ) renderer.clearDepth();
         renderer.render( scene, camera );
     }
