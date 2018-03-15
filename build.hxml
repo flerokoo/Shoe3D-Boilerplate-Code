@@ -53,6 +53,10 @@
 # The number is quality of generated webp image (from 0 to 100)
 -D shoe3d_generate_webp=80
 
+# Use atlas path inside atlas sprites
+# (Let's say there's an atlas with path "game/buttons". When this option is enabled: to get "play" button from atlas use "game/buttons/play")
+-D shoe3d_use_atlas_path
+
 # Use this flags to update actuate from main loop of Shoe3D
 # Highly recommended (in case you use actuate, ofc)
 -D actuate_manual_update
