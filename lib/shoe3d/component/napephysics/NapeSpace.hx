@@ -11,7 +11,7 @@ import shoe3d.core.Time;
  */
 class NapeSpace extends Component
 {
-    public var timestep:Float = 1/30;
+    public var timestep:Float = 1/60;
     public var space(default, null):Space;
     var _accumulatedTime = 0.0;
 
@@ -36,7 +36,7 @@ class NapeSpace extends Component
 
     override public function dispose()
     {
-        super.dispose();
+        super.dispose();        
         space = null;
     }
 

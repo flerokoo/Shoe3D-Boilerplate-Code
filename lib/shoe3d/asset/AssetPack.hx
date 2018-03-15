@@ -1,4 +1,5 @@
 package shoe3d.asset;
+import shoe3d.asset.AssetPack.TexDef;
 import shoe3d.util.Disposable;
 import shoe3d.util.Assert;
 import shoe3d.util.Log;
@@ -124,6 +125,13 @@ class AssetPack implements Disposable
         if ( ret == null && required ) throw 'No file with name=$name';
         return ret;
     }
+    
+    public function getBufferGeometry( name:String, required:Bool = true ):BufferGeometry
+    {
+        var ret = _bufGeomMap.get( name );
+        if ( ret == null && required ) throw 'No file with name=$name';
+        return ret;
+    }
 
     public function dispose()
     {
@@ -136,22 +144,43 @@ class AssetPack implements Disposable
         // private var _fontMap:Map<String,Font>;
         // private var _objectMap:Map<String,Object3D>;
 
-        function clearMap<String,V>(map:Map<String,V>):Void
+        function clearMap<String,V>(map:Map<String,V>, ?fn:V->Void):Void
         {
             for( i in map.keys() ) 
-            {
+            {                
+                if ( fn != null ) fn(map[i]);
                 map.set(i, null);
             }
         }
+        
+        function disposeObject3D(v:Object3D)
+        {
+            if ( untyped v.geometry != null ) 
+            {
+                untyped v.geometry.dispose();
+            }
+            
+            if ( untyped v.material != null ) 
+            {
+                untyped v.material.dispose();
+            }
+            
+            for ( i in v.children )
+            {
+                disposeObject3D( i );
+            }
+        }
 
-        clearMap(_texMap); _texMap = null;
+            
+        
+        clearMap(_texMap, function(t:TexDef) t.texture.dispose() ); _texMap = null;
         clearMap(_fileMap); _fileMap = null;
-        clearMap(_geomMap); _geomMap = null;
-        clearMap(_bufGeomMap); _bufGeomMap = null;
+        clearMap(_geomMap, function(g:Geometry) g.dispose() ); _geomMap = null;
+        clearMap(_bufGeomMap, function (g:BufferGeometry) g.dispose() ); _bufGeomMap = null;
         clearMap(_soundMap); _soundMap = null;
         clearMap(_atlasMap); _atlasMap = null;
         clearMap(_fontMap); _fontMap = null;
-        clearMap(_objectMap); _objectMap = null;
+        clearMap(_objectMap, disposeObject3D); _objectMap = null;
 
     }
 

@@ -1,7 +1,7 @@
 package shoe3d.component.particle;
 import haxe.Json;
 import shoe3d.asset.AssetPack;
-import shoe3d.asset.Res;
+import shoe3d.asset.Assets;
 import shoe3d.core.game.Component;
 import shoe3d.core.Time;
 import shoe3d.util.Assert;
@@ -83,7 +83,7 @@ class ParticleSystem extends Component
             throw e;
         }
 
-        out.group.texture.value = Res.getTexDef( out.meta.assetName ).texture;
+        out.group.texture.value = Assets.getTexDef( out.meta.assetName ).texture;
 
         var createRealVectorsAndColors = null;
         createRealVectorsAndColors = function( o:Dynamic )

@@ -17,9 +17,11 @@ class Atlas
     public var image(default, null):TexDef;
 
     private var _texMap:Map<String, TexDef>;
-
-    public function new( image:TexDef, ?json:String )
+    private var _prefix:String;
+    
+    public function new( image:TexDef, ?json:String, prefix:String = '' )
     {
+        _prefix = prefix;
         _texMap = new Map();
         this.image = image;
         if ( json != null )
@@ -61,8 +63,8 @@ class Atlas
                 {
                     if ( Std.is( Reflect.field(a, "frames"), Array  ) )
                         parseTexturePacker( json )
-                        else if ( Std.is( Reflect.field(a, "frames"), Dynamic ) )
-                            parseShoeBox(json );
+                    else if ( Std.is( Reflect.field(a, "frames"), Dynamic ) )
+                        parseShoeBox(json );
                 }
             }
 
@@ -85,7 +87,7 @@ class Atlas
                 var frame:Dynamic = Reflect.field( o, "frame" );
 
                 name = name.substr( 0, name.lastIndexOf( '.' ) );
-                _texMap.set( name,
+                _texMap.set( _prefix + name,
                 {
                     uv: UVfromRectangle(
                         new Rectangle(
@@ -120,7 +122,7 @@ class Atlas
             if (  Reflect.hasField( o, "frame" ))
             {
                 var frame:Dynamic = Reflect.field( o, "frame" );
-                var clearName = name.substr( 0, name.lastIndexOf( '.' )  );
+                var clearName = _prefix + name.substr( 0, name.lastIndexOf( '.' )  );
 
                 _texMap.set( clearName,
                 {

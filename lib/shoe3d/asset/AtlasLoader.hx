@@ -57,7 +57,7 @@ class AtlasLoader extends Loader
     {
         if ( _json != null && _tex != null )
         {
-            var atlas = new Atlas( shoe3d.asset.AssetPackLoader.wrapTexDef(_tex), _json );
+            var atlas = new Atlas( shoe3d.asset.AssetPackLoader.wrapTexDef(_tex), _json #if shoe3d_use_atlas_path , (_id+'/') #end );
             _pack._atlasMap.set( _id, atlas );
         }
     }

@@ -61,6 +61,11 @@ class TextSprite extends Element2D
 
     override public function dispose()
     {
+        for ( i in _pairs ) 
+        {
+            i.mat.dispose();
+            (untyped i.mesh.geometry).dispose();
+        }
         _glyphs = null;
         _pairs = null;
         _lines = null;

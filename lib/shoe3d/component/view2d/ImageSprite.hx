@@ -34,6 +34,8 @@ class ImageSprite extends Element2D
     {
         if( owner != null ) owner.transform.remove( _mesh );
         _mesh = null;
+        _geometry.dispose();
+        _material.dispose();
         _geometry = null;
         _material = null;
         

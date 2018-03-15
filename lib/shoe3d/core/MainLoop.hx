@@ -84,7 +84,7 @@ class MainLoop
             _onFrameSkip.emit();
             return;
         }
-
+        
         _preframe.emit();
 
         System.time.update();

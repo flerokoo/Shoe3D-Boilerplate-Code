@@ -31,7 +31,9 @@ class LevelCodeFormatter
         var ret = [];
         if ( Context.defined("shoe3d_allow_urls") )
         {
-            var list = Context.definedValue("shoe3d_allow_urls").split(";");
+            var raw = Context.definedValue("shoe3d_allow_urls");
+            raw = StringTools.replace(raw, '"', '');            
+            var list = raw.split(";");
 
             trace("Allow URLs: " + list );
             for ( i in list ) ret.push( Base64.encode( Bytes.ofString(i) ) );

@@ -1,4 +1,5 @@
 package shoe3d.asset;
+import haxe.io.Path;
 import js.three.BufferGeometry;
 import js.three.Object3D;
 import js.three.Material;
@@ -29,6 +30,7 @@ using shoe3d.util.StringHelp;
 @:build(shoe3d.asset.AssetProcessor.build())
 class AssetPackLoader
 {
+    private static var _webpSourceFormats = [ PNG, JPG, GIF ];
     private static var _supportedFormats:Array<AssetFormat>;
     private var _entries:Array<AssetEntry>;
     private var _pack:AssetPack;
@@ -56,6 +58,14 @@ class AssetPackLoader
         // TODO Придумать какой-то другой способ отличать геометрию от сцены и от просто json
         if ( ext != null &&( ext.toLowerCase() == 'geom' || ext.toLowerCase() == 'scene' ) ) name = Tools.getFileNameWithoutExtension( name );
         _entries.push( new AssetEntry( name, url, format, bytes, params ) );
+        
+        #if shoe3d_generate_webp
+        if ( _webpSourceFormats.indexOf( format ) > -1 )
+        {
+            var webpURL = Path.withoutExtension(url) + '.webp';
+            _entries.push( new AssetEntry(name, webpURL, WEBP, bytes, params )); //bytes are wrong!
+        }
+        #end
     }
 
     function getFormat( url:String ):AssetFormat
@@ -229,25 +239,25 @@ class AssetPackLoader
     {
         getSupportedFormatsAsync(
             function( formats:Array<AssetFormat> )
-        {
-            for ( format in formats)
-                for ( entry in entries )
-                {
-                    if ( entry.format == format )
+            {
+                for ( format in formats)
+                    for ( entry in entries )
                     {
-                        handler( entry );
-                        return;
+                        if ( entry.format == format )
+                        {
+                            handler( entry );
+                            return;
+                        }
                     }
-                }
-            handler(null);
-        }
+                handler(null);
+            }
         );
     }
 
     private function load()
     {
         untyped __js__('createjs.Sound.alternateExtensions = ["aac", "ogg", "mp3"]');
-
+        
         _manager = new LoadingManager( onCompletePack, onProgress );
         for ( e in _entriesToLoad )
         {
@@ -267,7 +277,16 @@ class AssetPackLoader
                     //new ObjectLoader(_manager).load( e.url, function (data) { onLoadObject( data, e ); trace(data); }, null, onEntryLoadError );
                     new FileLoader( _manager ).load( e.url, function(t) onLoadObjectFromJson(t, e), null, onEntryLoadError );
                 case ATLAS:
-                    new AtlasLoader( _manager ).load( e.url, e.extra.image, e.name, _pack, onEntryLoadError);
+                    var imagename = e.extra.image;
+                    
+                    
+                    #if shoe3d_generate_webp
+                    //again assuming that webp was generated
+                    if ( _supportedFormats.indexOf(WEBP) > -1 )
+                        imagename = haxe.io.Path.withoutExtension(imagename) + '.webp';
+                    #end
+                    
+                    new AtlasLoader( _manager ).load( e.url, imagename, e.name, _pack, onEntryLoadError);
                 case GLTF:
                     new GLTFLoader( _manager ).load(e.url, function(data) onLoadGLTF(data,e), null, onEntryLoadError);
                 default:
@@ -290,7 +309,6 @@ class AssetPackLoader
 
         if( gltf.scene != null ) 
         {            
-            trace("ADDED TO OBJECT MAP " + e.name);
             _pack._objectMap.set( e.name, gltf.scene );
         } 
         else if( gltf.scenes != null && gltf.scenes.length > 0 ) 
@@ -322,6 +340,7 @@ class AssetPackLoader
         }
         var loader = new ObjectLoader( _manager );
         loader.setTexturePath( haxe.io.Path.directory(e.url) + "/" );
+        
         #if shoe3d_generate_webp
         if (_supportedFormats.indexOf(WEBP) > -1)
         {
@@ -332,11 +351,12 @@ class AssetPackLoader
                 var temp:Array<Dynamic> = untyped parsed.images;
                 for (i in temp)
                 {
-                    i.url = haxe.io.Path.withoutExtension(i.url) + '.webp';
+                    i.url = Path.withoutExtension(i.url) + '.webp';
                 }
             }
-        }
+        }       
         #end
+        
         object = loader.parse( parsed );
         _pack._objectMap.set(e.name, object);
     }
@@ -355,7 +375,6 @@ class AssetPackLoader
 
     function onLoadTexture( tex:Texture, e:AssetEntry )
     {
-        trace(e.name, e.url, e.format);
         _pack._texMap.set( e.name,
         {
             texture: tex,
@@ -421,7 +440,7 @@ extern class TemporaryBufGeomLoader
     public function load( url:String, callback:BufferGeometry->Void, ?onProgress:Void->Void, ?onError:Dynamic->Void ):Void;
 }
 
-@:native("THREE.GeometryLoader")
+@:native("THREE.JSONLoader")
 extern class TemporaryGeomLoader
 {
     public function new( manager:LoadingManager );

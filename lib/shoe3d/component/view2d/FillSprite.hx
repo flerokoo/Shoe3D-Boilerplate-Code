@@ -39,7 +39,9 @@ class FillSprite extends Element2D
 
     override public function dispose()
     {
-        if( owner != null ) owner.transform.remove( mesh );
+        if ( owner != null ) owner.transform.remove( mesh );
+        geom.dispose();
+        material.dispose();
         mesh = null;
         geom = null;
         material = null;

@@ -26,6 +26,7 @@ class LightAmbient extends Component
     {
         super.onRemoved();
         owner.transform.remove( light );
+        
     }
 
 }

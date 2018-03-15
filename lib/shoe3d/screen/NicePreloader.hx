@@ -2,10 +2,10 @@ package shoe3d.screen;
 import haxe.Json;
 import haxe.Timer;
 import shoe3d.asset.AssetPack;
+import shoe3d.asset.Assets;
 import shoe3d.component.AutoPosition;
-import shoe3d.component.FillSprite;
 import shoe3d.component.ScaleButton;
-import shoe3d.component.SimpleGradientSprite;
+import shoe3d.component.view2d.*;
 import shoe3d.core.game.GameObject;
 import shoe3d.core.Layer2D;
 import shoe3d.util.Log;
@@ -99,7 +99,7 @@ class NicePreloader extends GameScreen
             {
                 onStartReal();
                 #if !debug
-                //System.window.requestFullscreen();
+                System.window.requestFullscreen();
                 #end
             } ).disableDefaultSounds() )
             .add( new AutoPosition(  ).setPos(0.5, POS_Y_RELATIVE) );
@@ -132,7 +132,7 @@ class NicePreloader extends GameScreen
         } );
     }
 
-    public static function loadFolderFromAssets( folder:String, onSuccess:AssetPack->Void, onStart:Void->Void, ?registerThisPackWithName:String ):Promise<AssetPack>
+    public static function loadFolderFromAssets( folder:String, onSuccess:AssetPack->Void, onStart:Void->Void, ?registerThisPackWithName:String )
     {
         if ( loading ) throw 'Can not load more that one asset pack at time';
 
@@ -143,12 +143,14 @@ class NicePreloader extends GameScreen
 
         onSuccessReal = onSuccess;
         onStartReal = onStart;
-
-        return System.loadFolderFromAssets(
-            folder,
-            onSuccessInternal,
-            function( p:Float ) progress._ = p,
-            registerThisPackWithName);
+        
+        
+        var h = Assets.addToQueue(folder, true);
+        
+        h.onComplete.connect( onSuccessInternal ).once();
+        h.onProgress.connect( function( p:Float ) progress._ = p );
+        
+        return h;
 
     }
 

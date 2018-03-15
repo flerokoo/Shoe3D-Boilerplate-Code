@@ -9,7 +9,7 @@ import js.three.DirectionalLight;
  */
 class LightDirectional extends Component
 {
-    var light:DirectionalLight;
+    public var light:DirectionalLight;
 
     public function new( ?hex:Int, ?intensity:Float )
     {

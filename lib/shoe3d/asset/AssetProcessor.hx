@@ -84,7 +84,7 @@ class AssetProcessor
                 #end
 
                 var result = processFormat( pathToCurrentAssetFromCWD );
-
+               
                 out.push(
                 {
                     path: pathToCurrentAssetFromCWD,
@@ -93,9 +93,10 @@ class AssetProcessor
                     format: result != null ? result.format : null,
                     extra: result != null ? result.extra : null
                 });
-
+                
+                /*
                 #if shoe3d_generate_webp
-                // assume that webp-version is generated for every asset which extension is contained in _webpSourceFormats
+                // assume that webp-version is generated for every asset format which extension is contained in _webpSourceFormats
                 if (_webpSourceFormats.indexOf(Path.extension(pathToCurrentAssetFromCWD)) > -1)
                 {
                     out.push(
@@ -108,6 +109,7 @@ class AssetProcessor
                     });
                 }
                 #end
+                */
             }
         }
     }
@@ -144,8 +146,18 @@ class AssetProcessor
         if ( image != null )
         {
             var imgPath = Path.join( [Path.directory(path), image] );
+            
+            // webp check will perform on runtime (if webp is supported and shoe3d_generate_webp -- it will be loaded)
+            
             #if !shoe3d_allow_textures
+            
             _remove.push(imgPath);
+            
+            // TODO
+            // without this shit atlasImage.webp gets added to loading list as Image asset (webp ofcourse)
+            // then AssetPackLoader picks it instead of ATLAS asset (and just loads image instead of loading atlas.json+atlasImage.json)
+            // if shoe3d_allow_textures, then even png is choosen over atlas asset
+            _remove.push( Path.withoutExtension(imgPath) + '.webp' ); 
             #end
             return { format: ATLAS, extra: {image: imgPath} };
         }
@@ -170,11 +182,13 @@ class AssetProcessor
                             var name = i.name;
                             var imagePath = Path.join([dir, name]);
                             _remove.push(imagePath);
+                            /*
                             #if shoe3d_generate_webp
                             // should prevent loading of webp version of this image too
                             // it is gonna be loaded when whole object is loaded
                             _remove.push(Path.withoutExtension(imagePath) + '.webp');
                             #end
+                            */
                         }
                     }
                     #end
@@ -204,12 +218,13 @@ class AssetProcessor
             {
                 var imageUrl = Path.join([base, i.uri]);
                 _remove.push(imageUrl);
-                trace(imageUrl);
+                /*
                 #if shoe3d_generate_webp
                 // should prevent loading of webp version of this image too
                 // it is gonna be loaded when whole object is loaded
                 _remove.push(Path.withoutExtension(imageUrl) + '.webp');
                 #end
+                */
             }
         }
     }

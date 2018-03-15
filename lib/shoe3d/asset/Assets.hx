@@ -64,7 +64,7 @@ class Assets
         }
         return true;
     }
-
+      
     static function loadPack( folder:String, ?onSuccess:AssetPack->Void, ?onProgress:Float->Void ):Promise<AssetPack>
     {
         var ldr = new AssetPackLoader();

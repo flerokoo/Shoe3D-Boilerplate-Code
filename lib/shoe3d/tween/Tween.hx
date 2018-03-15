@@ -6,11 +6,11 @@ import shoe3d.util.Disposable;
  * ...
  * @author asd
  */
-class Tween implements Disposable
+class Tween
 {
 
     public var onCompleteCallback:Void->Void;
-    public var onProgressCallback:Float->Void;
+    public var onProgressCallback:Float->Float->Void;
     public var easing:Float->Float = Easing.quadOut;
     
     
@@ -25,23 +25,23 @@ class Tween implements Disposable
     var _delay:Float = 0;
     var _time:Float = 0;
     var _started:Bool = false;    
+    var _propsFilled:Bool = false;
+    
+    var _context:TweenContext;
+    var _chained:Tween = null;
+    
     public var completed(default, null):Bool = false;
     
-    public function new( obj:Dynamic, duration:Float, ?fromProps:Dynamic, ?toProps:Dynamic ) 
+    public function new( obj:Dynamic, duration:Float ) 
     {
         _dur = duration;
-        _obj = obj;
-        
-        Assert.that( toProps != null || fromProps != null );
-        
-        _from = fromProps;
-        _to = toProps;
-        
-        checkAll();
+        _obj = obj;        
     }
     
-    function checkAll()
+    function fillEmptyPropertyDicts()
     {
+        Assert.that( _to != null || _from != null );
+        
         if ( _from == null )
         {
             _from = {};
@@ -51,8 +51,6 @@ class Tween implements Disposable
             }
         }
         
-        
-        
         if ( _to == null )
         {
             _to = {};
@@ -61,6 +59,20 @@ class Tween implements Disposable
                 Reflect.setField( _to, field, Reflect.getProperty(_obj, field) );
             }
         }
+        
+        _propsFilled = true;
+    }
+    
+    public function to(props:Dynamic)
+    {
+        _to = props;
+        return this;
+    }
+    
+    public function from(props:Dynamic)
+    {
+        _from = props;
+        return this;
     }
     
     public function dispose()
@@ -72,11 +84,15 @@ class Tween implements Disposable
         _to = null;
         _obj = null;
         _next = null;
+        _chained = null;
+        _context = null;
     }
     
     public function update( dt:Float )
     {
         if ( !_started || completed ) return;
+        
+        if ( ! _propsFilled ) fillEmptyPropertyDicts();
         
         if ( _delay > 0 ) {
             _delay -= dt;
@@ -86,6 +102,7 @@ class Tween implements Disposable
         _time += dt;
         
         var progress = Math.min( _time / _dur, 1 );
+        var easedProgress = easing( progress );
         
         if ( progress < 1 )
         {
@@ -93,11 +110,11 @@ class Tween implements Disposable
             {
                 var fromVal = Reflect.field( _from, field );
                 var toVal = Reflect.field( _to, field );
-                var lerped = fromVal + (toVal - fromVal) * easing( progress );
+                var lerped = fromVal + (toVal - fromVal) * easedProgress;
                 Reflect.setProperty( _obj, field, lerped );
             }
             
-            if ( onProgressCallback != null ) onProgressCallback(progress);
+            if ( onProgressCallback != null ) onProgressCallback(progress, easedProgress);
             
         } 
         else 
@@ -108,7 +125,7 @@ class Tween implements Disposable
                 Reflect.setProperty( _obj, field, toVal );
             } 
             
-            if ( onProgressCallback != null ) onProgressCallback(progress);
+            if ( onProgressCallback != null ) onProgressCallback(progress, easedProgress);
             
             complete();
         }
@@ -123,11 +140,31 @@ class Tween implements Disposable
         {
             onCompleteCallback();
         }
+        
+        if ( _chained != null )
+        {
+            _chained.start();
+        }
+    }
+    
+    public function chain( obj:Dynamic, duration:Float ):Tween
+    {
+        var tween = _context.get( obj, duration );        
+        _chained = tween;
+        return tween;
+    }
+    
+    public function timer( duration:Float ):Tween
+    {
+        var tween = _context.timer( duration, false );        
+        _chained = tween;
+        return tween;
     }
     
     public function start()
     {
         _started = true;
+        return this;
     }
     
     public function onComplete( fn:Void->Void )
@@ -136,7 +173,7 @@ class Tween implements Disposable
         return this;
     }
     
-    public function onProgress( fn:Float->Void ) 
+    public function onProgress( fn:Float->Float->Void ) 
     {
         onProgressCallback = fn;
         return this;
@@ -160,5 +197,11 @@ class Tween implements Disposable
         _delay = 0;
         _started = false;
         completed = false;
+    }
+
+    public function stop():Tween
+    {
+        completed = true;
+        return this;
     }
 }

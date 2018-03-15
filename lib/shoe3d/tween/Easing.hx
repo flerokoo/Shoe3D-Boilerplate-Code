@@ -189,7 +189,8 @@ class Easing
 
     public static function elasticOut(p:Float)
     {
-        return Math.sin(-13 * M_PI_2 * (p + 1)) * Math.pow(2, -10 * p) + 1;
+        //changed -13 to -10 (less bouncy)
+        return Math.sin(-10 * M_PI_2 * (p + 1)) * Math.pow(2, -10 * p) + 1;
     }
 
     public static function elasticInOut(p:Float)

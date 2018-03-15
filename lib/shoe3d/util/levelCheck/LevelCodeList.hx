@@ -43,15 +43,17 @@ class LevelCodeList
                     if ( isPattern( t, [2=>"r", 3=>"e", 4=>"f"] ) )
                     {
                         var mft:String = cast Reflect.field( lct, t );
-
+                        
+                        
                         for ( lvl in levelIndexDetectionCode )
                         {
-                            var dec = Base64.decode( lvl );
-
+                            var dec = Base64.decode( lvl );                            
                             var str = dec.getString( 0, dec.length );
-                            //trace(str, mft);
+                            
+                            
                             if ( mft.indexOf( str ) > -1 )
                             {
+                                
                                 flag = true;
                             }
                         }
@@ -79,7 +81,6 @@ class LevelCodeList
 
             var fvar1 = Reflect.field( aw, svar );
             var fvar2 = Reflect.field( aw, tvar );
-
             //trace( untyped __js__("fvar1===fvar2"));
 
             untyped __js__('return flag && fvar1===fvar2');

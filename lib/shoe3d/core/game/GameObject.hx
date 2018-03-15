@@ -88,7 +88,6 @@ class GameObject implements ComponentContainer implements GameObjectContainer im
     public function new( name:String = '' )
     {
         i = ii++;
-        Log.warn("CREATE " + i);
         this.name = name;
         components = [];
         children = [];
@@ -309,7 +308,7 @@ class GameObject implements ComponentContainer implements GameObjectContainer im
         disposeChildren();
 
         components = null;
-        children = null;
+        children = null;        
         transform.userData = null;
         transform = null;
         layer = null;

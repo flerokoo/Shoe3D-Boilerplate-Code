@@ -24,6 +24,7 @@ class Layer implements GameObjectContainer implements Disposable
     public var visible:Bool = true;
     public var fov(default, null):Value<Float>;
     public var clearDepthBeforeRender:Bool = false;
+    public var sortObjects = true;
 
     public function new( ?name:String )
     {
@@ -34,7 +35,7 @@ class Layer implements GameObjectContainer implements Disposable
 
         var changeFn = function(a, b) reconfigureCamera();
 
-        fov.change.connect( changeFn );
+        //fov.change.connect( changeFn );
 
         System.window._prePublicResize.connect( reconfigureCamera );
     }
@@ -46,7 +47,7 @@ class Layer implements GameObjectContainer implements Disposable
             if ( Std.is( camera, PerspectiveCamera ) )
             {
                 var pc = cast(camera, PerspectiveCamera);
-                pc.fov = fov._;
+                //pc.fov = fov._;
                 pc.aspect = System.window.width / System.window.height;
                 pc.updateProjectionMatrix();
             }
