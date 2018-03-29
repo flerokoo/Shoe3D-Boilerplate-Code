@@ -12,13 +12,13 @@ Utilizes three.js for rendering, SPE.js for GPU-powered particles, SoundJS for p
 * Support for 2D/UI rendering (unlike three.js)
 * Easy work with keyboard/mouse/touch input
 * Automatic assets management
-    * Framework is smart enough to load blender-exported Three.js objects/geometries as objects/geometries
+    * Framework is smart enough to load blender-exported Three.js objects/geometries as objects/geometries (yeah, that's right!)
     * Same thing with atlases (from ShoeBox) — they are detected at compile-time and loaded as atlases automatically 
-    * Support for multiple resource types of the same asset: for instance, framework loads texture.webp only if supported by browser, texture.png otherwise. Same with sound formats
+    * Support for multiple formats of the same asset: for instance, framework loads texture.webp only if supported by browser, texture.png otherwise. Same with sound formats
 
 ## How to use
 
-1) Clone this repo: `https://github.com/flerokoo/Shoe3D-Boilerplate-Code.git` 
+1) Clone this repo: `git clone https://github.com/flerokoo/Shoe3D-Boilerplate-Code.git` 
 2) Build the game: `gulp build [--release]`
 3) Test the game: `gulp serve`
 
@@ -60,21 +60,21 @@ Special thanks to the creator of Flambe, Bruno Garcia.
 
 ## TODO
 - [x] Create simple tweener, that works in context of current screen (so that all tweens are disposed, when screen is changed&disposed)
-- [ ] Add possibility to dispose assetpacks
-- [ ] Dispose screen after hidden
+- [x] Add possibility to dispose assetpacks
+- [x] Dispose screen after it is hidden (dispose children also)
 - [ ] Add support for loading msgpack-compressed objects
-- [ ] Add antialias flag
+- [ ] Add antialias flag for threejs (or maybe autodetect that bitch?)
 - [ ] Fix type of parameter of Log.log (when building in release mode)
-- [ ] Add getGeometry/getBufferGeometry to both  Assets and AssetPack
-- [ ] Fix sourcemaps bundling
-- [ ] Remake layer camera settings
-- [ ] Remake EasyDebug
+- [ ] Add getGeometry/getBufferGeometry to both Assets and AssetPack
+- [x] Fix sourcemaps bundling
+- [ ] Refactor layer camera settings
+- [ ] Refactor EasyDebug
 - [ ] Implement index.html tags autoreplace (i.e. <%%shoe3d_game_name%%> to what defined in build.hxml)
 - [ ] Fix double loading of the same texture, when shoe3d_allow_textures (maybe get it from three.js internal cache?)
 - [ ] Refactor input event propagation code
 - [ ] Add batching for 2D layers
 - [ ] Pass dt to gameobject/component update method (and think of some system to affect dt, that will be received by children gameobjects) 
 - [ ] Support for GLTF auto loading (i kinda added it already, but it seems that there's a problem with texture loading in three's GLTFLoader.js) Also have to decide what to do if theres not only scene loaded (probably just push all meshes/scenes to object3d map of assetpack)
-- [ ] Add webp encoding for jpeg/png (for size reduction)
+- [x] Add webp encoding for jpeg/png (for size reduction)
     - [x] Encoding itself
     - [x] Replace png/jpg image urls in threejs object json files (now replacing links before loading (in runtime) only if webp is supported -- assuming that webp version exists when shoe3d_generate_webp flag is enabled)
